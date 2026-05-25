@@ -10,11 +10,28 @@ class TicTacToe {
     public int turn = 1;
     public boolean win = false;
 
+    /**
+     * Executes a full move cycle: input handling, rendering, and win checking.
+     *
+     * @param choice player input (1–9 grid position or 0 for reset)
+     */
+    public void play(int choice) {
+        handleInput(choice);
+        render();
+        checkWin();
+    }
+
+    /**
+     * Initializes the game grid and prints the initial board state.
+     */
     public TicTacToe() {
         initGrid();
         printGrid();
     }
 
+    /**
+     * Initializes all cells in the grid with the void marker.
+     */
     private void initGrid() {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid.length; j++) {
@@ -23,8 +40,10 @@ class TicTacToe {
         }
     }
 
+    /**
+     * Prints the current state of the grid to the console.
+     */
     private void printGrid() {
-
         System.out.println();
         for (char[] row : grid) {
             for (char c : row) {
@@ -34,7 +53,11 @@ class TicTacToe {
         }
         System.out.println();
     }
-    
+
+    /**
+     * Checks all possible win conditions (rows, columns, diagonals)
+     * for the current player marker and updates win state if found.
+     */
     private void checkWin() {
 
         for (int i = 0; i < grid.length; i++) {
@@ -68,8 +91,9 @@ class TicTacToe {
             System.out.println("Player" + turn + " Won, Press 0 to Reset Game");
     }
 
-
-
+    /**
+     * Resets the game state including grid, turn, and current marker.
+     */
     private void resetGame() {
         currentMarker = 'X';
         turn = 1;
@@ -78,8 +102,12 @@ class TicTacToe {
         initGrid();
     }
 
-
-
+    /**
+     * Handles user input by mapping a numeric choice (1–9) to grid coordinates
+     * and triggering the corresponding game action.
+     *
+     * @param choice the input position selected by the player
+     */
     private void handleInput(int choice) {
         // Parse Input
         int row = 0;
@@ -106,6 +134,19 @@ class TicTacToe {
         mark(row, col);
     };
 
+    /**
+     * Renders the current board state.
+     */
+    private void render() {
+        printGrid();
+    };
+
+    /**
+     * Marks a cell on the grid with the current player's symbol if valid.
+     *
+     * @param row row index of the cell
+     * @param col column index of the cell
+     */
     private void mark(int row, int col) {
         if (grid[row][col] == voidMarker) {
             grid[row][col] = currentMarker;
@@ -115,18 +156,11 @@ class TicTacToe {
         }
     }
 
-    private void render() {
-        printGrid();
-    };
-
+    /**
+     * Toggles the current turn and switches player markers.
+     */
     private void toggleTurn() {
         turn = turn == 1 ? 2 : 1; // Toggles turn from 1 and 2 each time
         currentMarker = currentMarker == 'X' ? 'O' : 'X'; // Toggles the character
-    }
-
-    public void play(int choice) {
-        handleInput(choice);
-        render();
-        checkWin();
     }
 }
