@@ -19,7 +19,7 @@ public class GameGUI {
 
     private JLabel infoLabel  = new JLabel();
     private JLabel alertLabel = new JLabel();
-    private JLabel scoreLabel = new JLabel("Score 0-0");
+    private JLabel scoreLabel = new JLabel("Score: 0-0");
     private JLabel turnLabel  = new JLabel("Turn: Player-1");
 
     public JButton resetBtn = new JButton("RESET");
@@ -100,7 +100,7 @@ public class GameGUI {
                 int buttonNumber = (i * 3) + j + 1;
 
                 JButton btn = new JButton(String.valueOf(buttonNumber));
-                btn.setFont(new Font("roboto", Font.BOLD, 72));
+                btn.setFont(new Font("Roboto", Font.BOLD, 72));
 
                 btn.setBackground(appBgMain);
                 btn.setHorizontalAlignment(SwingConstants.CENTER); // Makes button text centered #TEMP
@@ -141,12 +141,12 @@ public class GameGUI {
 
         // Logo
         JLabel logo = new JLabel("BY-FAIZ");
-        logo.setFont(new Font("Roboto", Font.BOLD, 48));
+        logo.setFont(new Font(Font.SERIF, Font.BOLD, 48));
         logo.setForeground(secondary);
         logo.setHorizontalAlignment(SwingConstants.CENTER);
 
         // Reset Button
-        resetBtn.setFont(new Font("Roboto", Font.BOLD, 22));
+        resetBtn.setFont(new Font(Font.DIALOG, Font.BOLD, 32));
         resetBtn.setBackground(btnResetBg);
         resetBtn.setForeground(btnResetText);
         resetBtn.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));

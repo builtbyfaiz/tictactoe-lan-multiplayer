@@ -22,7 +22,7 @@ public class Game {
      * @return String in format "Score 1-1"
      */
     public String getScore() {
-        return "Score " + String.valueOf(player1Score) + "-" + String.valueOf(player2Score);
+        return "Score: " + String.valueOf(player1Score) + "-" + String.valueOf(player2Score);
     }
 
     public char[][] getGrid() {
