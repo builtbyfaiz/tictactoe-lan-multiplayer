@@ -1,26 +1,36 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.List;
 
 class Main {
+
     public static void main(String[] args) {
 
-        TicTacToe ticTacToe = new TicTacToe();
+        JFrame frame = new JFrame("TicTacToe");
+        frame.setSize(650, 650);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
 
-        while (true) {
-            System.out.print("Enter Input (1-9): ");
-            Scanner sc = new Scanner(System.in);
-            int choice = sc.nextInt();
-            sc.close();
-            ticTacToe.play(choice);
+        JPanel grid = new JPanel();
+        grid.setLayout(new GridLayout(3, 3, 5, 5));
+
+        List<JButton> labels = new ArrayList<>();
+
+        for (int i = 1; i <= 9; i++) {
+
+            JButton label = new JButton(String.valueOf(i));
+            label.setHorizontalAlignment(SwingConstants.CENTER);
+            label.setOpaque(true);
+            label.setBackground(Color.WHITE);
+            label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+            
+            labels.add(label);
+            grid.add(label);
         }
 
-        // JFrame frame = new JFrame("TicTacToe");
-        // frame.setSize(400, 300);
-        // frame.setLayout(new FlowLayout());
-        // frame.setVisible(true);
-        // frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.add(grid, BorderLayout.CENTER);
 
-        // JPanel displayGrid;
+        frame.setVisible(true);
     }
 }

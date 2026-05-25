@@ -21,6 +21,10 @@ class TicTacToe {
         checkWin();
     }
 
+    public char[][] getGrid() {
+        return grid;
+    }
+
     /**
      * Initializes the game grid and prints the initial board state.
      */
