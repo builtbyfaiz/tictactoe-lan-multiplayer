@@ -2,10 +2,13 @@ package view;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import model.Game;
 
 public class GameGUI {
 
+    // Variable Declarations
     private final int windowWidth  = 800;
     private final int windowHeight = 600;
 
@@ -21,6 +24,25 @@ public class GameGUI {
 
     public JButton resetBtn = new JButton("RESET");
 
+    // Color Pallete
+    Color appBgMain      = new Color(6, 6, 19);
+    Color appBgSidebar   = new Color(24, 18, 36);
+
+    Color primary        = new Color(0, 229, 255);
+    Color secondary      = new Color(234, 0, 154);
+
+    Color btnResetBg     = new Color(104, 21, 65);
+    Color btnResetText   = new Color(240, 240, 245);
+
+    Color primaryLight   = new Color(0, 114, 128);
+    Color secondaryLight = new Color(117, 0, 77);
+    
+    Border cyanBorder    = BorderFactory.createLineBorder(primaryLight, 2);
+    Border pinkBorder    = BorderFactory.createLineBorder(secondaryLight, 2);
+
+    Border defaultBorder = BorderFactory.createLineBorder(appBgSidebar, 2);
+
+    // Contructor
     public GameGUI() {
         initWindow();
         initGrid();
@@ -32,65 +54,19 @@ public class GameGUI {
         frame_.setVisible(true);
     }
 
-    private void initSidebar() {
+    // Getter/Seters
+    public JButton[][] getGrid() { return grid_; }
 
-        int sidebarWidth = (3 * windowWidth) / 10; // 30% of window width
-        sidebar.setPreferredSize(new Dimension(sidebarWidth, windowHeight));
-        sidebar.setBackground(Color.WHITE);
-
-        // Logo
-        JLabel logo = new JLabel("BY-FAIZ");
-        logo.setFont(new Font("Roboto", Font.BOLD, 48));
-        logo.setHorizontalAlignment(SwingConstants.CENTER);
-
-        alertLabel.setFont(new Font("Roboto", Font.BOLD, 22));
-        alertLabel.setForeground(new Color(180, 40, 40)); // Red alert text color theme
-        alertLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        resetBtn.setFont(new Font("Roboto", Font.BOLD, 22));
-        resetBtn.setBackground(new Color(70, 120, 170));
-        resetBtn.setForeground(Color.WHITE);
-        resetBtn.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
-        
-        infoLabel = new JLabel("<html><center>" 
-                                    + scoreLabel.getText() + "<br>" 
-                                    + turnLabel.getText() + 
-                                "</center></html>");
-
-
-
-        infoLabel.setFont(new Font("Roboto", Font.BOLD, 22));
-        infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        sidebar.add(logo);
-        sidebar.add(new JLabel(""));
-        sidebar.add(infoLabel);
-        sidebar.add(alertLabel);
-        sidebar.add(resetBtn);
-    }
-
-    public JButton[][] getGrid() {
-        return grid_;
-    }
-
-    public void setTurnLabel(String text) {
-        turnLabel.setText(text);
-    }
-
-    public void setScoreLabel(String text) {
-        scoreLabel.setText(text);
-    }
+    public void setTurnLabel(String text)  { turnLabel.setText(text); }
+    public void setScoreLabel(String text) { scoreLabel.setText(text); }
+    public void setAlertLabel(String text) { alertLabel.setText(text); }
 
     public void updateInfoLabel() {
-        infoLabel.setText("<html><center>" 
-                                    + scoreLabel.getText() + "<br>" 
-                                    + turnLabel.getText() + 
+        infoLabel.setText("<html><center>"
+                          + scoreLabel.getText() + "<br>"
+                          + turnLabel.getText()  +
                           "</center></html>");
     }
-
-    public void setAlertLabel(String text) {
-        alertLabel.setText(text);
-    };
 
     public void render(Game game) {
         char characterGrid[][] = game.getGrid();
@@ -98,6 +74,16 @@ public class GameGUI {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 grid_[i][j].setText(String.valueOf(characterGrid[i][j]));
+                
+                if (characterGrid[i][j] == 'X') {
+                    grid_[i][j].setForeground(primary);
+                    grid_[i][j].setBorder(cyanBorder);
+                }
+
+                if (characterGrid[i][j] == 'O') {
+                    grid_[i][j].setForeground(secondary);
+                    grid_[i][j].setBorder(pinkBorder);
+                }
             }
         }
     }
@@ -116,9 +102,9 @@ public class GameGUI {
                 JButton btn = new JButton(String.valueOf(buttonNumber));
                 btn.setFont(new Font("roboto", Font.BOLD, 72));
 
-                btn.setBackground(Color.GREEN);
+                btn.setBackground(appBgMain);
                 btn.setHorizontalAlignment(SwingConstants.CENTER); // Makes button text centered #TEMP
-                btn.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+                btn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
 
                 grid_[i][j] = btn;
             }
@@ -126,8 +112,8 @@ public class GameGUI {
     }
 
     private void initGameArea() {
-        int gameAreaWidth = (windowWidth * 7) / 10; // 70% of Window Width
-        int gameFrameSize = (gameAreaWidth * 7) / 10; // 70% of GameArea
+        int gameAreaWidth = (windowWidth   * 7) / 10;  // 70% of Window Width
+        int gameFrameSize = (gameAreaWidth * 7) / 10;  // 70% of GameArea
 
         JPanel gameFrame = new JPanel(new GridLayout(3, 3, 8, 8));
         gameFrame.setPreferredSize(new Dimension(gameFrameSize, gameFrameSize));
@@ -138,7 +124,48 @@ public class GameGUI {
             }
         }
 
+        gameArea.setBackground(appBgMain);
+        gameFrame.setBackground(appBgMain);
         gameArea.add(gameFrame);
     }
+    
+    private void initSidebar() {
 
+        int sidebarWidth = (3 * windowWidth) / 10; // 30% of window width
+        sidebar.setPreferredSize(new Dimension(sidebarWidth, windowHeight));
+        sidebar.setBackground(appBgSidebar);
+
+        // Logo
+        JLabel logo = new JLabel("BY-FAIZ");
+        logo.setFont(new Font("Roboto", Font.BOLD, 48));
+        logo.setForeground(secondary);
+        logo.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Reset Button
+        resetBtn.setFont(new Font("Roboto", Font.BOLD, 22));
+        resetBtn.setBackground(btnResetBg);
+        resetBtn.setForeground(btnResetText);
+        resetBtn.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
+
+        // Win/Invalid Condition Label
+        alertLabel.setForeground(Color.white); 
+        alertLabel.setFont(new Font("Roboto", Font.BOLD, 22));
+        alertLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        // Score + Turn Label
+        infoLabel = new JLabel("<html><center>"
+                               + scoreLabel.getText() + "<br>"
+                               + turnLabel.getText()  +
+                               "</center></html>");
+
+        infoLabel.setFont(new Font("Roboto", Font.BOLD, 22));
+        infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        infoLabel.setForeground(primary); 
+
+        sidebar.add(logo);
+        sidebar.add(new JLabel(""));
+        sidebar.add(infoLabel);
+        sidebar.add(alertLabel);
+        sidebar.add(resetBtn);
+    }
 }

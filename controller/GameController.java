@@ -17,7 +17,7 @@ public class GameController {
                         int choice = Integer.parseInt(btn.getText());
                         game.play(choice);
                     } catch (Exception exception) {
-                        view.setAlertLabel("Invalid Input, Box is already marked");
+                        view.setAlertLabel("<html><center>Invalid Input!<br>Box already marked</center></html>");
                     }
 
                     if (game.win)
