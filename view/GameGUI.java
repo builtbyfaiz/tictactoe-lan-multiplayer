@@ -11,11 +11,8 @@ public class GameGUI {
 
     private JFrame frame_     = new JFrame("TicTacToe By Faiz");
     private JPanel gameArea   = new JPanel(new GridBagLayout());
+    private JLabel alertLabel = new JLabel();
     private JButton[][] grid_ = new JButton[3][3];                // TicTacToe Buttons
-
-    public JButton[][] getGrid() {
-        return grid_;
-    }
 
     public GameGUI() {
         initWindow();
@@ -26,11 +23,20 @@ public class GameGUI {
         sidebar.setBackground(Color.RED);
         sidebar.setPreferredSize(new Dimension((30 * windowWidth) / 100, 800));
 
+        frame_.add(alertLabel, BorderLayout.NORTH);
         frame_.add(sidebar, BorderLayout.WEST);
         frame_.add(gameArea, BorderLayout.CENTER);
         frame_.setVisible(true);
     }
-    
+
+    public JButton[][] getGrid() {
+        return grid_;
+    }
+
+    public void alert(String text) {
+        alertLabel.setText(text);
+    };
+
     public void render(Game game) {
         char characterGrid[][] = game.getGrid();
 

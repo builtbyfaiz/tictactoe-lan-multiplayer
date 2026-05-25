@@ -9,8 +9,20 @@ public class GameController {
 
         for (var row : grid) {
             for (var btn : row) {
-                btn.addActionListener(e->{
-                    game.play(Integer.parseInt(btn.getText()));
+                btn.addActionListener(e -> {
+
+                    view.alert(null);
+                    
+                    try {
+                        int choice = Integer.parseInt(btn.getText());
+                        game.play(choice);
+                    } catch (Exception exception) {
+                        view.alert("Invalid Input, Box is already marked");
+                    }
+                    
+                    if (game.win)
+                        view.alert("Player" + game.turn + " Won, Please reset Game");
+
                     view.render(game);
                 });
             }

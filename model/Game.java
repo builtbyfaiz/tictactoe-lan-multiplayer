@@ -5,15 +5,11 @@ public class Game {
     private char grid_[][] = {{ '1', '2', '3' },
                               { '4', '5', '6' },
                               { '7', '8', '9' }};
-
-    private String alertMessage_ = ""; // Default = ""
     
-    char voidMarker = '-';
     char player1Marker = 'X';
     char player2Marker = 'O';
     char currentMarker = player1Marker;
 
-    
     public int turn = 1;
     public boolean win = false;
 
@@ -31,24 +27,6 @@ public class Game {
 
     public char[][] getGrid() {
         return grid_;
-    }
-
-    public String getAlert() {
-        return alertMessage_;
-    }
-
-    /**
-     * Prints the current state of the grid to the console.
-     */
-    private void printGrid() {
-        System.out.println();
-        for (char[] row : grid_) {
-            for (char c : row) {
-                System.out.print(c + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
     }
 
     /**
@@ -83,9 +61,6 @@ public class Game {
             if (grid_[1][1] == currentMarker)
                 if (grid_[2][0] == currentMarker)
                     win = true;
-
-        if (win)
-            alertMessage_ = "Player" + turn + " Won, Please Reset Game";
     }
 
     /**
@@ -97,8 +72,8 @@ public class Game {
         win = false;
 
         grid_ = new char[][] {{ '1', '2', '3' },
-                             { '4', '5', '6' },
-                             { '7', '8', '9' }};
+                              { '4', '5', '6' },
+                              { '7', '8', '9' }};
     }
 
     /**
@@ -139,8 +114,6 @@ public class Game {
         if (grid_[row][col] != player1Marker && grid_[row][col] != player2Marker) {
             grid_[row][col] = currentMarker;
             toggleTurn();
-        } else {
-            alertMessage_ =  "Invalid Input, Already Marked";
         }
     }
 
