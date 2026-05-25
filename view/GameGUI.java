@@ -8,47 +8,69 @@ import model.Game;
 
 public class GameGUI {
 
-    private static void init() {
-        int windowWidth = 800;
-        int windowHeight = 600;
+    private final int windowWidth = 800;
+    private final int windowHeight = 600;
 
-        JFrame frame = new JFrame("TicTacToe");
-        frame.setSize(800, 600);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new BorderLayout());
+    private JFrame frame_ = new JFrame("TicTacToe By Faiz");
+    private JPanel gameArea = new JPanel(new GridBagLayout());
 
-        JPanel grid = new JPanel(new GridLayout(3, 3, 3, 3));
-        grid.setPreferredSize(new Dimension(400, 400));
+    private JButton[][] grid_ = new JButton[3][3]; // TicTacToe Buttons
 
-        JPanel gameArea = new JPanel(new GridBagLayout());
-        gameArea.add(grid);
+    public void init() {
 
-        
+        initWindow();
+        initGrid();
+        initGameArea();
+
         JPanel sidebar = new JPanel(new FlowLayout());
         sidebar.setBackground(Color.RED);
-        sidebar.setPreferredSize(new Dimension((30*windowWidth)/100, 800));
+        sidebar.setPreferredSize(new Dimension((30 * windowWidth) / 100, 800));
 
-        for (int i = 1; i <= 9; i++) {
+        frame_.add(sidebar, BorderLayout.WEST);
+        frame_.add(gameArea, BorderLayout.CENTER);
+        frame_.setVisible(true);
 
-            JButton label = new JButton(String.valueOf(i));
-            label.setHorizontalAlignment(SwingConstants.CENTER);
-            label.setBackground(Color.GREEN);
-            label.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+    }
 
-            grid.add(label);
+    private void initWindow() {
+        frame_.setSize(windowWidth, windowHeight);
+        frame_.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame_.setLayout(new BorderLayout());
+    }
+
+    private void initGrid() {
+        for (int i = 0; i < grid_.length; i++) {
+            for (int j = 0; j < grid_.length; j++) {
+                int buttonNumber = (i * 3) + j + 1;
+
+                JButton btn = new JButton(String.valueOf(buttonNumber));
+
+                btn.setBackground(Color.GREEN);
+                btn.setHorizontalAlignment(SwingConstants.CENTER); // Makes button text centered #TEMP
+                btn.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+
+                grid_[i][j] = btn;
+            }
+        }
+    }
+
+    private void initGameArea() {
+        JPanel gameFrame = new JPanel(new GridLayout(3, 3, 3, 3));
+        gameFrame.setPreferredSize(new Dimension(400, 400));
+
+        for (var row : grid_) {
+            for (var btn : row) {
+                gameFrame.add(btn);
+            }
         }
 
-        frame.add(sidebar, BorderLayout.WEST);
-        frame.add(gameArea, BorderLayout.CENTER);
-        frame.setVisible(true);
-
+        gameArea.add(gameFrame);
     }
 
     public void render(Game game) {
         char grid[][] = game.getGrid();
-    }
+        for (int i = 0; i < grid.length; i++) {
 
-    public static void main(String[] args) {
-        init();
+        }
     }
 }
