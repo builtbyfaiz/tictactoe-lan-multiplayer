@@ -2,16 +2,36 @@ package model;
 
 public class Game {
 
-    private char grid_[][] = {{ '1', '2', '3' },
-                              { '4', '5', '6' },
-                              { '7', '8', '9' }};
-    
+    private char grid_[][] = { { '1', '2', '3' },
+            { '4', '5', '6' },
+            { '7', '8', '9' } };
+
     char player1Marker = 'X';
     char player2Marker = 'O';
     char currentMarker = player1Marker;
 
-    public int turn = 1;
+    public  int turn         = 1;
+    private int player1Score = 0;
+    private int player2Score = 0;
+    
     public boolean win = false;
+    
+    /**
+     * A function to get game's current score tally of both players
+     * 
+     * @return String in format "Score 1-1"
+     */
+    public String getScore() {
+        return "Score " + String.valueOf(player1Score) + "-" + String.valueOf(player2Score);
+    }
+
+    public char[][] getGrid() {
+        return grid_;
+    }
+
+    public int getTurn() {
+        return turn;
+    }
 
     /**
      * Executes a full move cycle: input handling, rendering, and win checking.
@@ -19,13 +39,9 @@ public class Game {
      * @param choice player input (1–9 grid position or 0 for reset)
      */
     public void play(int choice) {
-        if(!win) {
+        if (!win || choice == 0) {
             handleInput(choice);
         }
-    }
-
-    public char[][] getGrid() {
-        return grid_;
     }
 
     /**
@@ -60,6 +76,13 @@ public class Game {
             if (grid_[1][1] == currentMarker)
                 if (grid_[2][0] == currentMarker)
                     win = true;
+
+        if (win) {
+            if (turn == 1)
+                player1Score++;
+            if (turn == 2)
+                player2Score++;
+        }
     }
 
     /**
@@ -70,9 +93,9 @@ public class Game {
         turn = 1;
         win = false;
 
-        grid_ = new char[][] {{ '1', '2', '3' },
-                              { '4', '5', '6' },
-                              { '7', '8', '9' }};
+        grid_ = new char[][] { { '1', '2', '3' },
+                { '4', '5', '6' },
+                { '7', '8', '9' } };
     }
 
     /**
@@ -87,16 +110,45 @@ public class Game {
         int col = 0;
 
         switch (choice) {
-            case 1: row = 0; col = 0; break;
-            case 2: row = 0; col = 1; break;
-            case 3: row = 0; col = 2; break;
-            case 4: row = 1; col = 0; break;
-            case 5: row = 1; col = 1; break;
-            case 6: row = 1; col = 2; break;
-            case 7: row = 2; col = 0; break;
-            case 8: row = 2; col = 1; break;
-            case 9: row = 2; col = 2; break;
-            case 0: resetGame(); return;
+            case 1:
+                row = 0;
+                col = 0;
+                break;
+            case 2:
+                row = 0;
+                col = 1;
+                break;
+            case 3:
+                row = 0;
+                col = 2;
+                break;
+            case 4:
+                row = 1;
+                col = 0;
+                break;
+            case 5:
+                row = 1;
+                col = 1;
+                break;
+            case 6:
+                row = 1;
+                col = 2;
+                break;
+            case 7:
+                row = 2;
+                col = 0;
+                break;
+            case 8:
+                row = 2;
+                col = 1;
+                break;
+            case 9:
+                row = 2;
+                col = 2;
+                break;
+            case 0:
+                resetGame();
+                return;
         }
 
         // Take Actions

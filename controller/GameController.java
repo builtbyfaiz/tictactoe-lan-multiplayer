@@ -11,21 +11,31 @@ public class GameController {
             for (var btn : row) {
                 btn.addActionListener(e -> {
 
-                    view.alert(null);
+                    view.setAlertLabel(null);
                     
                     try {
                         int choice = Integer.parseInt(btn.getText());
                         game.play(choice);
                     } catch (Exception exception) {
-                        view.alert("Invalid Input, Box is already marked");
+                        view.setAlertLabel("Invalid Input, Box is already marked");
                     }
-                    
+
                     if (game.win)
-                        view.alert("Player" + game.turn + " Won, Please reset Game");
+                        view.setAlertLabel("<html><center>Player " + game.getTurn()
+                    + " Won!<br>Please reset Game</center></html>");
+                    
+                    view.setTurnLabel("Turn: Player-" + game.getTurn());
+                    view.setScoreLabel(game.getScore());
+                    view.updateInfoLabel(); // Internally update itself to align with latest score and turn
 
                     view.render(game);
                 });
             }
         }
+
+        view.resetBtn.addActionListener(e -> {
+            game.play(0);
+            view.render(game);
+        });
     }
 }
