@@ -1,4 +1,5 @@
-class TicTacToe {
+package model;
+public class Game {
 
     private char grid[][] = new char[3][3];
 
@@ -28,7 +29,7 @@ class TicTacToe {
     /**
      * Initializes the game grid and prints the initial board state.
      */
-    public TicTacToe() {
+    public Game() {
         initGrid();
         printGrid();
     }
