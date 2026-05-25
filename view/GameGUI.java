@@ -1,23 +1,23 @@
 package view;
 
 import java.awt.*;
-
 import javax.swing.*;
-
 import model.Game;
 
 public class GameGUI {
 
-    private final int windowWidth = 800;
+    private final int windowWidth  = 800;
     private final int windowHeight = 600;
 
-    private JFrame frame_ = new JFrame("TicTacToe By Faiz");
-    private JPanel gameArea = new JPanel(new GridBagLayout());
+    private JFrame frame_     = new JFrame("TicTacToe By Faiz");
+    private JPanel gameArea   = new JPanel(new GridBagLayout());
+    private JButton[][] grid_ = new JButton[3][3];                // TicTacToe Buttons
 
-    private JButton[][] grid_ = new JButton[3][3]; // TicTacToe Buttons
+    public JButton[][] getGrid() {
+        return grid_;
+    }
 
-    public void init() {
-
+    public GameGUI() {
         initWindow();
         initGrid();
         initGameArea();
@@ -29,7 +29,16 @@ public class GameGUI {
         frame_.add(sidebar, BorderLayout.WEST);
         frame_.add(gameArea, BorderLayout.CENTER);
         frame_.setVisible(true);
+    }
+    
+    public void render(Game game) {
+        char characterGrid[][] = game.getGrid();
 
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                grid_[i][j].setText(String.valueOf(characterGrid[i][j]));
+            }
+        }
     }
 
     private void initWindow() {
@@ -56,8 +65,8 @@ public class GameGUI {
     }
 
     private void initGameArea() {
-        int gameAreaWidth = (windowWidth * 7) / 10; // 70% of Window Width
-        int gameFrameSize = (gameAreaWidth * 7) / 10; // 70% of GameArea
+        int gameAreaWidth = (windowWidth * 7) / 10;    // 70% of Window Width
+        int gameFrameSize = (gameAreaWidth * 7) / 10;  // 70% of GameArea
 
         JPanel gameFrame = new JPanel(new GridLayout(3, 3, 8, 8));
         gameFrame.setPreferredSize(new Dimension(gameFrameSize, gameFrameSize));
@@ -71,13 +80,4 @@ public class GameGUI {
         gameArea.add(gameFrame);
     }
 
-    public void render(Game game) {
-        char characterGrid[][] = game.getGrid();
-
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                grid_[i][j].setText(String.valueOf(characterGrid[i][j]));
-            }
-        }
-    }
 }

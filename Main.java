@@ -1,16 +1,15 @@
-import javax.swing.*;
-
+import model.Game;
 import view.GameGUI;
+import controller.GameController;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 
 class Main {
 
     public static void main(String[] args) {
-        GameGUI game = new GameGUI();
-        game.init();
+        
+        Game ticTacToe = new Game();
+        GameGUI gameGUI = new GameGUI();
+        GameController controller = new GameController(ticTacToe, gameGUI);
         
     }
 }

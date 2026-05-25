@@ -1,7 +1,10 @@
 package model;
+
 public class Game {
 
-    private char grid[][] = new char[3][3];
+    private char grid[][] = {{ '1', '2', '3' },
+                             { '4', '5', '6' },
+                             { '7', '8', '9' }};
 
     char voidMarker = '-';
     char player1Marker = 'X';
@@ -30,19 +33,7 @@ public class Game {
      * Initializes the game grid and prints the initial board state.
      */
     public Game() {
-        initGrid();
         printGrid();
-    }
-
-    /**
-     * Initializes all cells in the grid with the void marker.
-     */
-    private void initGrid() {
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid.length; j++) {
-                grid[i][j] = voidMarker;
-            }
-        }
     }
 
     /**
@@ -104,7 +95,9 @@ public class Game {
         turn = 1;
         win = false;
 
-        initGrid();
+        grid = new char[][] {{ '1', '2', '3' },
+                             { '4', '5', '6' },
+                             { '7', '8', '9' }};
     }
 
     /**
@@ -124,10 +117,10 @@ public class Game {
             case 3: row = 0; col = 2; break;
             case 4: row = 1; col = 0; break;
             case 5: row = 1; col = 1; break;
-            case 6: row = 1; col = 2; break; 
-            case 7: row = 2; col = 0; break; 
-            case 8: row = 2; col = 1; break; 
-            case 9: row = 2; col = 2; break; 
+            case 6: row = 1; col = 2; break;
+            case 7: row = 2; col = 0; break;
+            case 8: row = 2; col = 1; break;
+            case 9: row = 2; col = 2; break;
             case 0: resetGame();
 
             default:
@@ -153,7 +146,7 @@ public class Game {
      * @param col column index of the cell
      */
     private void mark(int row, int col) {
-        if (grid[row][col] == voidMarker) {
+        if (grid[row][col] != player1Marker && grid[row][col] != player2Marker) {
             grid[row][col] = currentMarker;
             toggleTurn();
         } else {
