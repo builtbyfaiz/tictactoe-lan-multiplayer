@@ -21,7 +21,6 @@ public class Game {
     public void play(int choice) {
         if(!win) {
             handleInput(choice);
-            checkWin();
         }
     }
 
@@ -37,13 +36,13 @@ public class Game {
 
         for (int i = 0; i < grid_.length; i++) {
 
-            // Check Vertically
+            // Check Horizontally
             if (grid_[i][0] == currentMarker)
                 if (grid_[i][1] == currentMarker)
                     if (grid_[i][2] == currentMarker)
                         win = true;
 
-            // Check Horizontally
+            // Check Vertically
             if (grid_[0][i] == currentMarker)
                 if (grid_[1][i] == currentMarker)
                     if (grid_[2][i] == currentMarker)
@@ -97,7 +96,7 @@ public class Game {
             case 7: row = 2; col = 0; break;
             case 8: row = 2; col = 1; break;
             case 9: row = 2; col = 2; break;
-            case 0: resetGame();
+            case 0: resetGame(); return;
         }
 
         // Take Actions
@@ -113,7 +112,10 @@ public class Game {
     private void mark(int row, int col) {
         if (grid_[row][col] != player1Marker && grid_[row][col] != player2Marker) {
             grid_[row][col] = currentMarker;
-            toggleTurn();
+            checkWin();
+            if (!win) {
+                toggleTurn();
+            }
         }
     }
 
