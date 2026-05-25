@@ -40,7 +40,7 @@ public class GameGUI {
     Border cyanBorder    = BorderFactory.createLineBorder(primaryLight, 2);
     Border pinkBorder    = BorderFactory.createLineBorder(secondaryLight, 2);
 
-    Border defaultBorder = BorderFactory.createLineBorder(appBgSidebar, 2);
+    Border defaultBorder = BorderFactory.createLineBorder(Color.DARK_GRAY, 2);
 
     // Contructor
     public GameGUI() {
@@ -105,7 +105,8 @@ public class GameGUI {
                 btn.setBackground(appBgMain);
                 btn.setHorizontalAlignment(SwingConstants.CENTER); // Makes button text centered #TEMP
                 btn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
-
+                btn.setFocusPainted(false);
+                
                 grid_[i][j] = btn;
             }
         }
@@ -116,6 +117,11 @@ public class GameGUI {
         int gameFrameSize = (gameAreaWidth * 7) / 10;  // 70% of GameArea
 
         JPanel gameFrame = new JPanel(new GridLayout(3, 3, 8, 8));
+        
+        gameArea.setBackground(appBgMain);
+        gameFrame.setBackground(appBgMain);
+
+        gameArea.setPreferredSize(new Dimension(gameAreaWidth, windowHeight));
         gameFrame.setPreferredSize(new Dimension(gameFrameSize, gameFrameSize));
 
         for (var row : grid_) {
@@ -124,8 +130,6 @@ public class GameGUI {
             }
         }
 
-        gameArea.setBackground(appBgMain);
-        gameFrame.setBackground(appBgMain);
         gameArea.add(gameFrame);
     }
     
@@ -146,6 +150,7 @@ public class GameGUI {
         resetBtn.setBackground(btnResetBg);
         resetBtn.setForeground(btnResetText);
         resetBtn.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
+        resetBtn.setFocusPainted(false);
 
         // Win/Invalid Condition Label
         alertLabel.setForeground(Color.white); 
@@ -167,5 +172,14 @@ public class GameGUI {
         sidebar.add(infoLabel);
         sidebar.add(alertLabel);
         sidebar.add(resetBtn);
+    }
+    
+    public void resetGridColors() {
+        for (var row : grid_) {
+            for (var btn : row) {
+                btn.setBorder(defaultBorder);
+                btn.setForeground(Color.DARK_GRAY);
+            }
+        }
     }
 }

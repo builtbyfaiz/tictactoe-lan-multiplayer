@@ -35,6 +35,8 @@ public class GameController {
 
         view.resetBtn.addActionListener(e -> {
             game.play(0);
+            view.resetGridColors();
+            view.setAlertLabel(null);
             view.render(game);
         });
     }
