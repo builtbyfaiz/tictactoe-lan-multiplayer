@@ -2,15 +2,18 @@ package model;
 
 public class Game {
 
-    private char grid[][] = {{ '1', '2', '3' },
-                             { '4', '5', '6' },
-                             { '7', '8', '9' }};
+    private char grid_[][] = {{ '1', '2', '3' },
+                              { '4', '5', '6' },
+                              { '7', '8', '9' }};
 
+    private String alertMessage_ = ""; // Default = ""
+    
     char voidMarker = '-';
     char player1Marker = 'X';
     char player2Marker = 'O';
     char currentMarker = player1Marker;
 
+    
     public int turn = 1;
     public boolean win = false;
 
@@ -20,20 +23,18 @@ public class Game {
      * @param choice player input (1–9 grid position or 0 for reset)
      */
     public void play(int choice) {
-        handleInput(choice);
-        render();
-        checkWin();
+        if(!win) {
+            handleInput(choice);
+            checkWin();
+        }
     }
 
     public char[][] getGrid() {
-        return grid;
+        return grid_;
     }
 
-    /**
-     * Initializes the game grid and prints the initial board state.
-     */
-    public Game() {
-        printGrid();
+    public String getAlert() {
+        return alertMessage_;
     }
 
     /**
@@ -41,7 +42,7 @@ public class Game {
      */
     private void printGrid() {
         System.out.println();
-        for (char[] row : grid) {
+        for (char[] row : grid_) {
             for (char c : row) {
                 System.out.print(c + " ");
             }
@@ -56,35 +57,35 @@ public class Game {
      */
     private void checkWin() {
 
-        for (int i = 0; i < grid.length; i++) {
+        for (int i = 0; i < grid_.length; i++) {
 
             // Check Vertically
-            if (grid[i][0] == currentMarker)
-                if (grid[i][1] == currentMarker)
-                    if (grid[i][2] == currentMarker)
+            if (grid_[i][0] == currentMarker)
+                if (grid_[i][1] == currentMarker)
+                    if (grid_[i][2] == currentMarker)
                         win = true;
 
             // Check Horizontally
-            if (grid[0][i] == currentMarker)
-                if (grid[1][i] == currentMarker)
-                    if (grid[2][i] == currentMarker)
+            if (grid_[0][i] == currentMarker)
+                if (grid_[1][i] == currentMarker)
+                    if (grid_[2][i] == currentMarker)
                         win = true;
         }
 
         // Check Primary Diagonal -> \
-        if (grid[0][0] == currentMarker)
-            if (grid[1][1] == currentMarker)
-                if (grid[2][2] == currentMarker)
+        if (grid_[0][0] == currentMarker)
+            if (grid_[1][1] == currentMarker)
+                if (grid_[2][2] == currentMarker)
                     win = true;
 
         // Check Secondary Diagonal -> /
-        if (grid[0][2] == currentMarker)
-            if (grid[1][1] == currentMarker)
-                if (grid[2][0] == currentMarker)
+        if (grid_[0][2] == currentMarker)
+            if (grid_[1][1] == currentMarker)
+                if (grid_[2][0] == currentMarker)
                     win = true;
 
         if (win)
-            System.out.println("Player" + turn + " Won, Press 0 to Reset Game");
+            alertMessage_ = "Player" + turn + " Won, Please Reset Game";
     }
 
     /**
@@ -95,7 +96,7 @@ public class Game {
         turn = 1;
         win = false;
 
-        grid = new char[][] {{ '1', '2', '3' },
+        grid_ = new char[][] {{ '1', '2', '3' },
                              { '4', '5', '6' },
                              { '7', '8', '9' }};
     }
@@ -122,22 +123,11 @@ public class Game {
             case 8: row = 2; col = 1; break;
             case 9: row = 2; col = 2; break;
             case 0: resetGame();
-
-            default:
-                System.out.print("Invalid Input, Enter (1-9): ");
-                break;
         }
 
         // Take Actions
         mark(row, col);
-    };
-
-    /**
-     * Renders the current board state.
-     */
-    private void render() {
-        printGrid();
-    };
+    }
 
     /**
      * Marks a cell on the grid with the current player's symbol if valid.
@@ -146,11 +136,11 @@ public class Game {
      * @param col column index of the cell
      */
     private void mark(int row, int col) {
-        if (grid[row][col] != player1Marker && grid[row][col] != player2Marker) {
-            grid[row][col] = currentMarker;
+        if (grid_[row][col] != player1Marker && grid_[row][col] != player2Marker) {
+            grid_[row][col] = currentMarker;
             toggleTurn();
         } else {
-            System.out.println("Invalid Input, Already Marked");
+            alertMessage_ =  "Invalid Input, Already Marked";
         }
     }
 
