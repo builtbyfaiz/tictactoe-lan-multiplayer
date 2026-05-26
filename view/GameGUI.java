@@ -163,7 +163,7 @@ public class GameGUI {
                                + turnLabel.getText()  +
                                "</center></html>");
 
-        infoLabel.setFont(new Font("Roboto", Font.BOLD, 22));
+        infoLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 32));
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         infoLabel.setForeground(primary); 
 

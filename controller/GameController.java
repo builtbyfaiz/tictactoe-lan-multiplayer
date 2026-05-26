@@ -22,7 +22,7 @@ public class GameController {
 
                     if (game.win)
                         view.setAlertLabel("<html><center>Player " + game.getTurn()
-                    + " Won!<br>Please reset Game</center></html>");
+                    + " Won!<br>Please Reset Game</center></html>");
                     
                     view.setTurnLabel("Turn: Player-" + game.getTurn());
                     view.setScoreLabel(game.getScore());
