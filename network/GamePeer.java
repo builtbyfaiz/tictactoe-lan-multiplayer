@@ -6,13 +6,15 @@ import java.net.Socket;
 public abstract class GamePeer {
     protected Socket socket;
 
-    public void send(int data) {
+    public boolean send(int data) {
         try {
             socket.getOutputStream().write(data);
             System.out.println("Sent: " + data);
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Error sending your move to opponent.");
+            return false;
         }
     }
 
