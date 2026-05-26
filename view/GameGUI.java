@@ -23,10 +23,10 @@ public class GameGUI {
     private JLabel scoreLabel = new JLabel("Score: 0-0");
     private JLabel turnLabel  = new JLabel("Turn: Player-1");
 
-    public JButton resetBtn = new JButton("RESET");
+    private JButton resetBtn = new JButton("RESET");
 
-    private JButton clientBtn     = new JButton("Client");
-    private JButton serverBtn     = new JButton("Server");
+    private JButton clientBtn  = new JButton("Client");
+    private JButton serverBtn  = new JButton("Server");
     private JPanel networkBtns = new JPanel(new GridBagLayout());
 
     // Color Pallete
@@ -60,9 +60,14 @@ public class GameGUI {
     }
 
     // Getter/Seters
-    public JButton[][] getGrid() { return grid_; }
+    public JFrame    getWindow() { return frame_; }
+    public JButton[][] getGrid() { return grid_;  }
 
-    public void setTurnLabel(String text)  { turnLabel.setText(text); }
+    public JButton getReseBtn()   { return resetBtn;  }
+    public JButton getServerBtn() { return serverBtn; }
+    public JButton getClientBtn() { return clientBtn; }
+
+    public void setTurnLabel(String text)  { turnLabel.setText(text);  }
     public void setScoreLabel(String text) { scoreLabel.setText(text); }
     public void setAlertLabel(String text) { alertLabel.setText(text); }
 
@@ -73,7 +78,7 @@ public class GameGUI {
                           "</center></html>");
     }
 
-    public void render(Game game) {
+    public void renderGameGrid(Game game) {
         char characterGrid[][] = game.getGrid();
 
         for (int i = 0; i < 3; i++) {

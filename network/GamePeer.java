@@ -28,7 +28,7 @@ public abstract class GamePeer {
         }
     }
 
-    public abstract void connect(String IP);
+    public abstract boolean connect(String IP);
 
     public void disconnect() {
         try {

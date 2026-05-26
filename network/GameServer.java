@@ -14,24 +14,19 @@ public class GameServer extends GamePeer {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Error opening server.");
-        } 
-
-        try {
-            String myIP = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-            System.err.println("Error getting local IP");
-        } 
-
+        }         
     }
     
-    public void connect(String IP) {
+    public boolean connect(String IP) {
         try {
             socket = server.accept();
             server.close();
+            System.out.println("Player 2 has connected.");
+            return true;
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Error connecting to client.");
+            return false;
         }
     }
 }
