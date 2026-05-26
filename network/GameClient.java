@@ -8,10 +8,22 @@ public class GameClient implements NetworkInterface {
     Socket socket;
 
     public void send(int data) {
+        try {
+            socket.getOutputStream().write(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error sending your move to opponent.");
+        }
     }
 
     public int receive() {
-        return 0;
+        try {
+            return socket.getInputStream().read();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error receiving opponent's move.");
+            return -1;
+        }
     }
 
     public void connect(String IP) {
