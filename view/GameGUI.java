@@ -17,12 +17,17 @@ public class GameGUI {
     private JPanel gameArea   = new JPanel(new GridBagLayout());
     private JButton[][] grid_ = new JButton[3][3];
 
+    //Side Bar Components
     private JLabel infoLabel  = new JLabel();
     private JLabel alertLabel = new JLabel();
     private JLabel scoreLabel = new JLabel("Score: 0-0");
     private JLabel turnLabel  = new JLabel("Turn: Player-1");
 
     public JButton resetBtn = new JButton("RESET");
+
+    private JButton clientBtn     = new JButton("Client");
+    private JButton serverBtn     = new JButton("Server");
+    private JPanel networkBtns = new JPanel(new GridBagLayout());
 
     // Color Pallete
     Color appBgMain      = new Color(6, 6, 19);
@@ -145,18 +150,38 @@ public class GameGUI {
         logo.setForeground(secondary);
         logo.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // Reset Button
-        resetBtn.setFont(new Font(Font.DIALOG, Font.BOLD, 32));
-        resetBtn.setBackground(btnResetBg);
-        resetBtn.setForeground(btnResetText);
-        resetBtn.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
-        resetBtn.setFocusPainted(false);
+        initInfoLabel(); 
+        initAlertLabel();
+        initResetBtn();
+        initNetworkBtns();
+        
+        sidebar.add(logo);
+        sidebar.add(new JLabel(""));
+        sidebar.add(infoLabel);
+        sidebar.add(alertLabel);
+        sidebar.add(resetBtn);
+        sidebar.add(networkBtns);
+    }
 
-        // Win/Invalid Condition Label
-        alertLabel.setForeground(Color.white); 
-        alertLabel.setFont(new Font("Roboto", Font.BOLD, 22));
-        alertLabel.setHorizontalAlignment(SwingConstants.CENTER);
+    private void initNetworkBtns() {
+        networkBtns.setBackground(appBgSidebar);
+        networkBtns.add(serverBtn);
+        networkBtns.add(clientBtn);
 
+        for (Component btn : networkBtns.getComponents()) {
+            btn.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
+            btn.setBackground(appBgMain);
+            btn.setForeground(btnResetText);
+            btn.setPreferredSize(new Dimension(100,50));
+        }
+        serverBtn.setBorder(pinkBorder);
+        serverBtn.setFocusPainted(false);
+
+        clientBtn.setBorder(cyanBorder);
+        clientBtn.setFocusPainted(false);
+    }
+
+    private void initInfoLabel() {
         // Score + Turn Label
         infoLabel = new JLabel("<html><center>"
                                + scoreLabel.getText() + "<br>"
@@ -165,35 +190,23 @@ public class GameGUI {
 
         infoLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 32));
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        infoLabel.setForeground(primary); 
+        infoLabel.setForeground(primary);
+    }
 
-        JButton clientBtn = new JButton("Client");
-        JButton serverBtn = new JButton("Server");
-        JPanel networkButtons = new JPanel(new GridBagLayout());
-        networkButtons.setBackground(appBgSidebar);
+    private void initResetBtn() {
+        // Reset Button
+        resetBtn.setFont(new Font(Font.DIALOG, Font.BOLD, 32));
+        resetBtn.setBackground(btnResetBg);
+        resetBtn.setForeground(btnResetText);
+        resetBtn.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
+        resetBtn.setFocusPainted(false);
+    }
 
-        networkButtons.add(serverBtn);
-        networkButtons.add(clientBtn);
-
-        for (Component btn : networkButtons.getComponents()) {
-            btn.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
-            btn.setBackground(appBgMain);
-            btn.setForeground(btnResetText);
-            btn.setPreferredSize(new Dimension(100,50));
-        }
-
-        clientBtn.setBorder(cyanBorder);
-        clientBtn.setFocusPainted(false);
-
-        serverBtn.setBorder(pinkBorder);
-        serverBtn.setFocusPainted(false);
-        
-        sidebar.add(logo);
-        sidebar.add(new JLabel(""));
-        sidebar.add(infoLabel);
-        sidebar.add(alertLabel);
-        sidebar.add(resetBtn);
-        sidebar.add(networkButtons);
+    private void initAlertLabel() {
+        // Win/Invalid Condition Label
+        alertLabel.setForeground(Color.white); 
+        alertLabel.setFont(new Font("Roboto", Font.BOLD, 22));
+        alertLabel.setHorizontalAlignment(SwingConstants.CENTER);
     }
     
     public void resetGridColors() {
