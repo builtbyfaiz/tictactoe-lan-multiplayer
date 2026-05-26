@@ -167,11 +167,33 @@ public class GameGUI {
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         infoLabel.setForeground(primary); 
 
+        JButton clientBtn = new JButton("Client");
+        JButton serverBtn = new JButton("Server");
+        JPanel networkButtons = new JPanel(new GridBagLayout());
+        networkButtons.setBackground(appBgSidebar);
+
+        networkButtons.add(serverBtn);
+        networkButtons.add(clientBtn);
+
+        for (Component btn : networkButtons.getComponents()) {
+            btn.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
+            btn.setBackground(appBgMain);
+            btn.setForeground(btnResetText);
+            btn.setPreferredSize(new Dimension(100,50));
+        }
+
+        clientBtn.setBorder(cyanBorder);
+        clientBtn.setFocusPainted(false);
+
+        serverBtn.setBorder(pinkBorder);
+        serverBtn.setFocusPainted(false);
+        
         sidebar.add(logo);
         sidebar.add(new JLabel(""));
         sidebar.add(infoLabel);
         sidebar.add(alertLabel);
         sidebar.add(resetBtn);
+        sidebar.add(networkButtons);
     }
     
     public void resetGridColors() {
