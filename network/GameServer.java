@@ -34,7 +34,7 @@ public class GameServer implements NetworkInterface {
 
     }
 
-    public void connect() {
+    public void connect(String IP) {
         try {
             socket = server.accept();
         } catch (IOException e) {
