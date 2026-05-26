@@ -4,10 +4,32 @@ import model.Game;
 import view.GameGUI;
 
 public class GameController {
+    private Game game;
+    private GameGUI view;
+    
     public GameController(Game game, GameGUI view) {
-        var grid = view.getGrid();
+        this.game = game;
+        this.view = view;    
 
-        for (var row : grid) {
+        bindEvents();
+    }
+
+    private void bindEvents() {
+        bindGridEvents();
+        bindResetBtnEvents();
+    }
+
+    private void bindResetBtnEvents() {
+        view.resetBtn.addActionListener(e -> {
+            game.play(0);
+            view.resetGridColors();
+            view.setAlertLabel(null);
+            view.render(game);
+        });
+    }
+
+    private void bindGridEvents() {
+        for (var row : view.getGrid()) {
             for (var btn : row) {
                 btn.addActionListener(e -> {
 
@@ -32,12 +54,5 @@ public class GameController {
                 });
             }
         }
-
-        view.resetBtn.addActionListener(e -> {
-            game.play(0);
-            view.resetGridColors();
-            view.setAlertLabel(null);
-            view.render(game);
-        });
     }
 }
