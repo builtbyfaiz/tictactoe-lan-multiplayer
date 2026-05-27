@@ -22,10 +22,8 @@ public class GameController {
     private GameGUI view;
     private GamePeer network;
 
-    NetworkState networkState;
-    TurnState turnState;
-
-    private boolean isMyTurn = false;
+    private NetworkState networkState;
+    private TurnState turnState;
 
     public GameController(Game game, GameGUI view) {
         this.game = game;
@@ -110,7 +108,7 @@ public class GameController {
     }
 
     private void bindMultiplayerResetButton() {
-        if(network!=null)
+        if (network != null)
             network.disconnect();
 
         unbindEvents();
@@ -133,10 +131,11 @@ public class GameController {
     }
 
     private void initClient() {
-        if(network!=null)
+        if (network != null)
             network.disconnect();
         network = new GameClient();
         setNetworkState(NetworkState.CLIENT_INIT);
+        turnState = TurnState.WAITING_FOR_OPPONENT;
 
         new Thread(() -> {
             Scanner sc = new Scanner(System.in);
@@ -151,12 +150,23 @@ public class GameController {
                 if (connected) {
                     SwingUtilities.invokeLater(() -> {
                         setNetworkState(NetworkState.CONNECTED);
+                        if (turnState == TurnState.WAITING_FOR_OPPONENT) {
+                            new Thread(() -> {
+                                int move = network.receive();
+                                if (move != -1) {
+                                    SwingUtilities.invokeLater(() -> {
+                                        game.play(move);
+                                        view.update();
+                                        turnState = TurnState.MY_TURN;
+                                    });
+                                }
+                            }).start();
+                        }
                     });
                 }
             }
             sc.close();
         }).start();
-
     }
 
     private void bindMultiplayerToggleButton() {
@@ -185,7 +195,7 @@ public class GameController {
     }
 
     private void initServer() {
-        if(network!=null)
+        if (network != null)
             network.disconnect();
         network = new GameServer();
         setNetworkState(NetworkState.SERVER_INIT);
@@ -198,7 +208,7 @@ public class GameController {
                 if (connected) {
                     setNetworkState(NetworkState.CONNECTED);
                     toggleMultiplayer(true);
-                    isMyTurn = true;
+                    turnState = TurnState.MY_TURN;
                 } else {
                     setNetworkState(NetworkState.FAILED);
                 }
@@ -242,20 +252,26 @@ public class GameController {
                     view.setAlertLabel(null);
 
                     try {
-                        if (isMyTurn) {
+                        if (turnState == TurnState.MY_TURN) {
                             int choice = Integer.parseInt(button.getText());
-                            boolean moveSent = network.send(choice);
-                            if (moveSent) {
+                            if (network.send(choice)) {
                                 game.play(choice);
-                                isMyTurn = false;
+                                view.update();
+                                turnState = TurnState.MOVE_SENT;
                             }
                         }
-                        if (!isMyTurn) {
-                            int player2Choice = network.receive();
-                            if (player2Choice != -1) {
-                                game.play(player2Choice);
-                                isMyTurn = true;
-                            }
+                        if (turnState == TurnState.MOVE_SENT) {
+                            new Thread(() -> {
+                                int move = network.receive();
+                                if (move != -1) {
+                                    SwingUtilities.invokeLater(() -> {
+                                        game.play(move);
+                                        view.update();
+                                        turnState = TurnState.MY_TURN;
+                                    });
+                                }
+                            }).start();
+                            turnState = TurnState.WAITING_FOR_OPPONENT;
                         }
                     } catch (Exception exception) {
                         view.setAlertLabel("<html><center>Invalid Input!<br>Box already marked</center></html>");
