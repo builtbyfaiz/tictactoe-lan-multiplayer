@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import model.Game;
+import model.NetworkState;
 
 public class GameGUI {
 
@@ -20,10 +21,11 @@ public class GameGUI {
     private JButton[][] grid_ = new JButton[3][3];
 
     //Side Bar Components
-    private JLabel infoLabel  = new JLabel();
-    private JLabel alertLabel = new JLabel();
-    private JLabel scoreLabel = new JLabel("Score: 0-0");
-    private JLabel turnLabel  = new JLabel("Turn: Player-1");
+    private       JLabel infoLabel       = new JLabel();
+    private       JLabel alertLabel      = new JLabel();
+    private       JLabel scoreLabel      = new JLabel("Score: 0-0");
+    private       JLabel turnLabel       = new JLabel("Turn: Player-1");
+    private JToggleButton multiplayerToggleButton = new JToggleButton("Multiplayer");
 
     private JButton resetbutton = new JButton("RESET");
 
@@ -70,6 +72,7 @@ public class GameGUI {
     public JButton getReseButton()   { return resetbutton;  }
     public JButton getServerButton() { return serverbutton; }
     public JButton getClientButton() { return clientbutton; }
+    public JToggleButton getMultiplayerToggleButton() { return multiplayerToggleButton; }
 
     public void setTurnLabel(String text)  { turnLabel.setText(text);  }
     public void setScoreLabel(String text) { scoreLabel.setText(text); }
@@ -82,7 +85,7 @@ public class GameGUI {
                           "</center></html>");
     }
 
-    public void renderGameGrid() {
+    public void updateGameGrid() {
         char characterGrid[][] = game.getGrid();
 
         for (int i = 0; i < 3; i++) {
@@ -100,6 +103,10 @@ public class GameGUI {
                 }
             }
         }
+    }
+
+    public void update() {
+        updateGameGrid();
     }
 
     private void initWindow() {
@@ -163,11 +170,9 @@ public class GameGUI {
         initAlertLabel();
         initResetbutton();
         initNetworkbuttons();
-
-        // JToggleButton multiplayerToggleBtton;
         
         sidebar.add(logo);
-        sidebar.add(new JLabel(""));
+        sidebar.add(multiplayerToggleButton);
         sidebar.add(infoLabel);
         sidebar.add(alertLabel);
         sidebar.add(resetbutton);
@@ -226,6 +231,33 @@ public class GameGUI {
                 button.setBorder(defaultBorder);
                 button.setForeground(Color.DARK_GRAY);
             }
+        }
+    }
+
+    public void updateNetworkState(NetworkState state, String IP) {
+        switch (state) {
+            case SERVER_INIT:
+                setAlertLabel("<html><center>Server Initialized.<br>IP: " + IP + "</center></html>");
+                break;
+
+            case CLIENT_INIT:
+                setAlertLabel("<html><center>Client Initialized.<br>Enter IP in terminal.</center></html>");
+                break;
+
+            case CONNECTED:
+                setAlertLabel("<html><center>Connected Successfully.</center></html>");
+                break;
+        
+            case FAILED:
+                setAlertLabel("Something Went Wrong.");
+                break;
+
+            case DISCONNECTED:
+                setAlertLabel("<html><center>Disconnected Successfully.<br>Now playing Singleplayer</center></html>");
+                break;
+
+            default:
+                break;
         }
     }
 }
