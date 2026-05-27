@@ -8,7 +8,8 @@ public abstract class GamePeer {
 
     public boolean send(int data) {
         try {
-            socket.getOutputStream().write(data);
+            socket.getOutputStream().write(data); // Write to stream
+            socket.getOutputStream().flush(); // Send the data then clear stream
             System.out.println("Sent: " + data);
             return true;
         } catch (IOException e) {
