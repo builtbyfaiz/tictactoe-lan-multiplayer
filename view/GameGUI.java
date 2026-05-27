@@ -15,20 +15,20 @@ public class GameGUI {
     
     private Game game;
     
-    private JFrame frame_     = new JFrame("TicTacToe By Faiz");
-    private JPanel sidebar    = new JPanel(new GridLayout(6, 1, 2, 2));
-    private JPanel gameArea   = new JPanel(new GridBagLayout());
-    private JButton[][] grid_ = new JButton[3][3];
+    private JFrame frame     = new JFrame("TicTacToe By Faiz");
+    private JPanel sidebar   = new JPanel(new GridLayout(6, 1, 2, 2));
+    private JPanel gameArea  = new JPanel(new GridBagLayout());
+    private JButton[][] grid = new JButton[3][3];
 
     //Side Bar Components
-    private       JLabel infoLabel       = new JLabel();
-    private       JLabel alertLabel      = new JLabel();
-    private       JLabel scoreLabel      = new JLabel("Score: 0-0");
-    private       JLabel turnLabel       = new JLabel("Turn: Player-1");
-    private JToggleButton multiplayerToggleButton = new JToggleButton("Multiplayer");
+    private JLabel infoLabel  = new JLabel();
+    private JLabel alertLabel = new JLabel();
+    private JLabel scoreLabel = new JLabel("Score: 0-0");
+    private JLabel turnLabel  = new JLabel("Turn: Player-1");
 
-    private JButton resetbutton = new JButton("RESET");
+    private JCheckBox multiplayerToggleButton = new JCheckBox("Multiplayer");
 
+    private JButton resetbutton   = new JButton("RESET");
     private JButton clientbutton  = new JButton("Client");
     private JButton serverbutton  = new JButton("Server");
     private JPanel networkbuttons = new JPanel(new GridBagLayout());
@@ -59,14 +59,14 @@ public class GameGUI {
         initGameArea();
         initSidebar();
 
-        frame_.add(sidebar, BorderLayout.WEST);
-        frame_.add(gameArea, BorderLayout.CENTER);
-        frame_.setVisible(true);
+        frame.add(sidebar, BorderLayout.WEST);
+        frame.add(gameArea, BorderLayout.CENTER);
+        frame.setVisible(true);
     }
 
     // Getter/Seters
-    public JFrame    getWindow() { return frame_; }
-    public JButton[][] getGrid() { return grid_;  }
+    public JFrame    getWindow() { return frame; }
+    public JButton[][] getGrid() { return grid;  }
 
     // public JButton getResebutton()   { return resetbutton;  }
     public JButton getReseButton()   { return resetbutton;  }
@@ -90,16 +90,16 @@ public class GameGUI {
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                grid_[i][j].setText(String.valueOf(characterGrid[i][j]));
+                grid[i][j].setText(String.valueOf(characterGrid[i][j]));
                 
                 if (characterGrid[i][j] == 'X') {
-                    grid_[i][j].setForeground(primary);
-                    grid_[i][j].setBorder(cyanBorder);
+                    grid[i][j].setForeground(primary);
+                    grid[i][j].setBorder(cyanBorder);
                 }
 
                 if (characterGrid[i][j] == 'O') {
-                    grid_[i][j].setForeground(secondary);
-                    grid_[i][j].setBorder(pinkBorder);
+                    grid[i][j].setForeground(secondary);
+                    grid[i][j].setBorder(pinkBorder);
                 }
             }
         }
@@ -110,14 +110,14 @@ public class GameGUI {
     }
 
     private void initWindow() {
-        frame_.setSize(windowWidth, windowHeight);
-        frame_.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame_.setLayout(new BorderLayout());
+        frame.setSize(windowWidth, windowHeight);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
     }
 
     private void initGrid() {
-        for (int i = 0; i < grid_.length; i++) {
-            for (int j = 0; j < grid_.length; j++) {
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid.length; j++) {
                 int buttonNumber = (i * 3) + j + 1;
 
                 JButton button = new JButton(String.valueOf(buttonNumber));
@@ -128,7 +128,7 @@ public class GameGUI {
                 button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
                 button.setFocusPainted(false);
                 
-                grid_[i][j] = button;
+                grid[i][j] = button;
             }
         }
     }
@@ -145,7 +145,7 @@ public class GameGUI {
         gameArea.setPreferredSize(new Dimension(gameAreaWidth, windowHeight));
         gameFrame.setPreferredSize(new Dimension(gameFrameSize, gameFrameSize));
 
-        for (var row : grid_) {
+        for (var row : grid) {
             for (var button : row) {
                 gameFrame.add(button);
             }
@@ -226,7 +226,7 @@ public class GameGUI {
     }
     
     public void resetGridColors() {
-        for (var row : grid_) {
+        for (var row : grid) {
             for (var button : row) {
                 button.setBorder(defaultBorder);
                 button.setForeground(Color.DARK_GRAY);

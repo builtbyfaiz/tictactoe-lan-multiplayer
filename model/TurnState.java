@@ -1,8 +1,8 @@
 package model;
 
 public enum TurnState {
-    YOUR_TURN,
+    MY_TURN,
+    MOVE_SENT,
     WAITING_FOR_OPPONENT,
-    SENDING_MOVE,
-    PROCESSING_MOVE
+    MOVE_RECEIVED // Process received move
 }
