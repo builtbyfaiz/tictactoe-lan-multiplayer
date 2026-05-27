@@ -23,11 +23,11 @@ public class GameGUI {
     private JLabel scoreLabel = new JLabel("Score: 0-0");
     private JLabel turnLabel  = new JLabel("Turn: Player-1");
 
-    private JButton resetBtn = new JButton("RESET");
+    private JButton resetbutton = new JButton("RESET");
 
-    private JButton clientBtn  = new JButton("Client");
-    private JButton serverBtn  = new JButton("Server");
-    private JPanel networkBtns = new JPanel(new GridBagLayout());
+    private JButton clientbutton  = new JButton("Client");
+    private JButton serverbutton  = new JButton("Server");
+    private JPanel networkbuttons = new JPanel(new GridBagLayout());
 
     // Color Pallete
     Color appBgMain      = new Color(6, 6, 19);
@@ -36,8 +36,8 @@ public class GameGUI {
     Color primary        = new Color(0, 229, 255);
     Color secondary      = new Color(234, 0, 154);
 
-    Color btnResetBg     = new Color(104, 21, 65);
-    Color btnResetText   = new Color(240, 240, 245);
+    Color buttonResetBg     = new Color(104, 21, 65);
+    Color buttonResetText   = new Color(240, 240, 245);
 
     Color primaryLight   = new Color(0, 114, 128);
     Color secondaryLight = new Color(117, 0, 77);
@@ -63,9 +63,10 @@ public class GameGUI {
     public JFrame    getWindow() { return frame_; }
     public JButton[][] getGrid() { return grid_;  }
 
-    public JButton getReseBtn()   { return resetBtn;  }
-    public JButton getServerBtn() { return serverBtn; }
-    public JButton getClientBtn() { return clientBtn; }
+    // public JButton getResebutton()   { return resetbutton;  }
+    public JButton getReseButton()   { return resetbutton;  }
+    public JButton getServerButton() { return serverbutton; }
+    public JButton getClientButton() { return clientbutton; }
 
     public void setTurnLabel(String text)  { turnLabel.setText(text);  }
     public void setScoreLabel(String text) { scoreLabel.setText(text); }
@@ -109,15 +110,15 @@ public class GameGUI {
             for (int j = 0; j < grid_.length; j++) {
                 int buttonNumber = (i * 3) + j + 1;
 
-                JButton btn = new JButton(String.valueOf(buttonNumber));
-                btn.setFont(new Font("Roboto", Font.BOLD, 72));
+                JButton button = new JButton(String.valueOf(buttonNumber));
+                button.setFont(new Font("Roboto", Font.BOLD, 72));
 
-                btn.setBackground(appBgMain);
-                btn.setHorizontalAlignment(SwingConstants.CENTER); // Makes button text centered #TEMP
-                btn.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
-                btn.setFocusPainted(false);
+                button.setBackground(appBgMain);
+                button.setHorizontalAlignment(SwingConstants.CENTER); // Makes button text centered #TEMP
+                button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
+                button.setFocusPainted(false);
                 
-                grid_[i][j] = btn;
+                grid_[i][j] = button;
             }
         }
     }
@@ -135,8 +136,8 @@ public class GameGUI {
         gameFrame.setPreferredSize(new Dimension(gameFrameSize, gameFrameSize));
 
         for (var row : grid_) {
-            for (var btn : row) {
-                gameFrame.add(btn);
+            for (var button : row) {
+                gameFrame.add(button);
             }
         }
 
@@ -157,33 +158,35 @@ public class GameGUI {
 
         initInfoLabel(); 
         initAlertLabel();
-        initResetBtn();
-        initNetworkBtns();
+        initResetbutton();
+        initNetworkbuttons();
+
+        // JToggleButton multiplayerToggleBtton;
         
         sidebar.add(logo);
         sidebar.add(new JLabel(""));
         sidebar.add(infoLabel);
         sidebar.add(alertLabel);
-        sidebar.add(resetBtn);
-        sidebar.add(networkBtns);
+        sidebar.add(resetbutton);
+        sidebar.add(networkbuttons);
     }
 
-    private void initNetworkBtns() {
-        networkBtns.setBackground(appBgSidebar);
-        networkBtns.add(serverBtn);
-        networkBtns.add(clientBtn);
+    private void initNetworkbuttons() {
+        networkbuttons.setBackground(appBgSidebar);
+        networkbuttons.add(serverbutton);
+        networkbuttons.add(clientbutton);
 
-        for (Component btn : networkBtns.getComponents()) {
-            btn.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
-            btn.setBackground(appBgMain);
-            btn.setForeground(btnResetText);
-            btn.setPreferredSize(new Dimension(100,50));
+        for (Component button : networkbuttons.getComponents()) {
+            button.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
+            button.setBackground(appBgMain);
+            button.setForeground(buttonResetText);
+            button.setPreferredSize(new Dimension(100,50));
         }
-        serverBtn.setBorder(pinkBorder);
-        serverBtn.setFocusPainted(false);
+        serverbutton.setBorder(pinkBorder);
+        serverbutton.setFocusPainted(false);
 
-        clientBtn.setBorder(cyanBorder);
-        clientBtn.setFocusPainted(false);
+        clientbutton.setBorder(cyanBorder);
+        clientbutton.setFocusPainted(false);
     }
 
     private void initInfoLabel() {
@@ -198,13 +201,13 @@ public class GameGUI {
         infoLabel.setForeground(primary);
     }
 
-    private void initResetBtn() {
+    private void initResetbutton() {
         // Reset Button
-        resetBtn.setFont(new Font(Font.DIALOG, Font.BOLD, 32));
-        resetBtn.setBackground(btnResetBg);
-        resetBtn.setForeground(btnResetText);
-        resetBtn.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
-        resetBtn.setFocusPainted(false);
+        resetbutton.setFont(new Font(Font.DIALOG, Font.BOLD, 32));
+        resetbutton.setBackground(buttonResetBg);
+        resetbutton.setForeground(buttonResetText);
+        resetbutton.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
+        resetbutton.setFocusPainted(false);
     }
 
     private void initAlertLabel() {
@@ -216,9 +219,9 @@ public class GameGUI {
     
     public void resetGridColors() {
         for (var row : grid_) {
-            for (var btn : row) {
-                btn.setBorder(defaultBorder);
-                btn.setForeground(Color.DARK_GRAY);
+            for (var button : row) {
+                button.setBorder(defaultBorder);
+                button.setForeground(Color.DARK_GRAY);
             }
         }
     }

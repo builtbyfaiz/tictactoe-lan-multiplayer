@@ -3,20 +3,21 @@ package network;
 import java.io.IOException;
 import java.net.*;
 
+import javax.swing.SwingUtilities;
+
 public class GameServer extends GamePeer {
 
     ServerSocket server;
-    Socket socket;
 
     public GameServer() {
         try {
-            server = new ServerSocket(8080); // New Connection Listener on the port        
+            server = new ServerSocket(8080); // New Connection Listener on the port
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Error opening server.");
-        }         
+        }
     }
-    
+
     public boolean connect(String IP) {
         try {
             socket = server.accept();
