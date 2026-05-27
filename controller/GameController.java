@@ -3,8 +3,6 @@ package controller;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Scanner;
 
 import javax.swing.JButton;
@@ -32,6 +30,9 @@ public class GameController {
     public GameController(Game game, GameGUI view) {
         this.game = game;
         this.view = view;
+
+        view.getClientButton().setVisible(false);
+        view.getServerButton().setVisible(false);
 
         view.getWindow().addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -109,8 +110,8 @@ public class GameController {
     }
 
     private void bindMultiplayerResetButton() {
-
-        network.disconnect();
+        if(network!=null)
+            network.disconnect();
 
         unbindEvents();
         bindMultiplayerEvents();
@@ -132,7 +133,8 @@ public class GameController {
     }
 
     private void initClient() {
-        network.disconnect();
+        if(network!=null)
+            network.disconnect();
         network = new GameClient();
         setNetworkState(NetworkState.CLIENT_INIT);
 
@@ -183,7 +185,8 @@ public class GameController {
     }
 
     private void initServer() {
-        network.disconnect();
+        if(network!=null)
+            network.disconnect();
         network = new GameServer();
         setNetworkState(NetworkState.SERVER_INIT);
 
