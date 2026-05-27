@@ -11,7 +11,9 @@ public class GameGUI {
     // Variable Declarations
     private final int windowWidth  = 800;
     private final int windowHeight = 600;
-
+    
+    private Game game;
+    
     private JFrame frame_     = new JFrame("TicTacToe By Faiz");
     private JPanel sidebar    = new JPanel(new GridLayout(6, 1, 2, 2));
     private JPanel gameArea   = new JPanel(new GridBagLayout());
@@ -48,7 +50,8 @@ public class GameGUI {
     Border defaultBorder = BorderFactory.createLineBorder(Color.DARK_GRAY, 2);
 
     // Contructor
-    public GameGUI() {
+    public GameGUI(Game game) {
+        this.game = game;
         initWindow();
         initGrid();
         initGameArea();
@@ -79,7 +82,7 @@ public class GameGUI {
                           "</center></html>");
     }
 
-    public void renderGameGrid(Game game) {
+    public void renderGameGrid() {
         char characterGrid[][] = game.getGrid();
 
         for (int i = 0; i < 3; i++) {

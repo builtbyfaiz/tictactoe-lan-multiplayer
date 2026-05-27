@@ -1,15 +1,17 @@
 package network;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public abstract class GamePeer {
     protected Socket socket;
 
     public boolean send(int data) {
         try {
-            socket.getOutputStream().write(data);  // Write to stream.
-            socket.getOutputStream().flush();      // Send the data then clear stream.
+            socket.getOutputStream().write(data); // Write to stream.
+            socket.getOutputStream().flush(); // Send the data then clear stream.
             System.out.println("Sent: " + data);
             return true;
         } catch (IOException e) {
@@ -41,4 +43,14 @@ public abstract class GamePeer {
             e.printStackTrace();
         }
     }
+
+    // Returns local IP which the client can connect to.
+    public String getIP() {
+        try {
+            return InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            return "";
+        }
+    }
+
 }

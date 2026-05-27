@@ -1,10 +1,13 @@
 package controller;
 
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+
+import javax.swing.JButton;
 
 import model.Game;
 import view.GameGUI;
@@ -12,12 +15,31 @@ import network.GameClient;
 import network.GamePeer;
 import network.GameServer;
 
+enum ConnectionStatus {
+    SERVER_INIT,
+    CLIENT_INIT,
+    CONNECTED,
+    DISCONNECTED,
+    FAILED
+}
+
+enum TurnState {
+    YOUR_TURN,
+    WAITING_FOR_OPPONENT,
+    SENDING_MOVE,
+    PROCESSING_MOVE
+}
+
 public class GameController {
     private Game game;
     private GameGUI view;
-    private boolean multiplayerMode = false;
-
     private GamePeer network;
+
+    ConnectionStatus networkState;
+    TurnState turnState;
+
+    private boolean multiplayerMode = false;
+    private boolean isMyTurn = false;
 
     public GameController(Game game, GameGUI view) {
         this.game = game;
@@ -25,7 +47,8 @@ public class GameController {
 
         view.getWindow().addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                network.disconnect();
+                if (multiplayerMode)
+                    network.disconnect();
             }
         });
 
@@ -33,59 +56,149 @@ public class GameController {
     }
 
     private void bindEvents() {
-        bindGridEvents();
-        bindResetBtnEvents();
+        // bindGridEvents();
         bindNetworkButtons();
+        bindResetButtonEvents();
     }
 
-    private void bindResetBtnEvents() {
-        view.getReseBtn().addActionListener(e -> {
+    private void unbindGridEvents() {
+        // Remove all listeners from grid
+        for (var row : view.getGrid()) {
+            for (var button : row) {
+                for (ActionListener al : button.getActionListeners())
+                    button.removeActionListener(al);
+            }
+        }
+    }
+
+    private void bindResetButtonEvents() {
+        view.getReseButton().addActionListener(e -> {
+
+            System.out.println("Single Player[1] | Multiplayer [2]: ");
+            Scanner sc = new Scanner(System.in);
+            int choice = sc.nextInt();
+            sc.close();
+
+            if (choice == 1) {
+                if (multiplayerMode) {
+                    network.disconnect();
+                    multiplayerMode = false;
+                }
+                unbindGridEvents();
+                bindGridEvents();
+            }
+
+            if (choice == 2) {
+                unbindGridEvents();
+                bindMultiplayerGridEvents();
+            }
+
             game.play(0);
             view.resetGridColors();
             view.setAlertLabel(null);
-            view.renderGameGrid(game);
+            view.renderGameGrid();
         });
     }
 
     private void bindNetworkButtons() {
-        view.getServerBtn().addActionListener(e -> {
+
+        view.getServerButton().addActionListener(e -> {
+            network.disconnect();
             network = new GameServer();
-            String IP = "";
-            try {
-                IP = InetAddress.getLocalHost().getHostAddress();
-            } catch (UnknownHostException e1) {
+
+            view.setAlertLabel("<html><center>Waiting for client.<br>IP: " + network.getIP() + "</center></html>");
+
+            boolean connected = network.connect(null);
+            if (connected) {
+                view.setAlertLabel("<html><center>Connected...<br>Make first move.</center></html>");
+                multiplayerMode = true;
+                isMyTurn = true;
+                bindMultiplayerGridEvents();
             }
-            view.setAlertLabel("<html>Waiting for client.<br>IP: " + IP + "</html>");
-            view.renderGameGrid(game);
-            boolean conneced = network.connect(null);
-            if(conneced)
-                view.setAlertLabel("<html>Successfully Connected.<br>Make first move.</html>");
         });
 
-        view.getClientBtn().addActionListener(e -> {
+        view.getClientButton().addActionListener(e -> {
+
             network = new GameClient();
 
-            System.out.println("Enter Server IP to Connect to: ");
             Scanner sc = new Scanner(System.in);
-            String IP = sc.next();
-            sc.close();
 
-            boolean connected = network.connect(IP);
-            if(connected)
-                view.setAlertLabel("Successfully connected to server with IP: " + IP);
+            boolean connected = false;
+            String IP = "";
+
+            while (!connected) {
+                System.out.print("Enter Server IP to Connect to: ");
+                IP = sc.next();
+
+                connected = network.connect(IP);
+                if (connected) {
+                    view.setAlertLabel(
+                            "<html><center>Successfully connected to.<br>Server IP: " + IP +
+                                    "</center></html>");
+                    multiplayerMode = true;
+                    bindMultiplayerGridEvents();
+                }
+            }
+            sc.close();
         });
     }
 
     private void bindGridEvents() {
         for (var row : view.getGrid()) {
-            for (var btn : row) {
-                btn.addActionListener(e -> {
+            for (var button : row) {
+                button.addActionListener(e -> {
 
                     view.setAlertLabel(null);
 
                     try {
-                        int choice = Integer.parseInt(btn.getText());
+                        int choice = Integer.parseInt(button.getText());
                         game.play(choice);
+                    } catch (Exception exception) {
+                        view.setAlertLabel("<html><center>Invalid Input!<br>Box already marked</center></html>");
+                    }
+
+                    if (game.win)
+                        view.setAlertLabel("<html><center>Player " + game.getTurn()
+                                + " Won!<br>Please Reset Game</center></html>");
+
+                    view.setTurnLabel("Turn: Player-" + game.getTurn());
+                    view.setScoreLabel(game.getScore());
+
+                    view.updateInfoLabel(); // Internally update itself to align with latest score and turn
+
+                    view.renderGameGrid();
+                });
+            }
+        }
+    }
+
+    private void bindMultiplayerGridEvents() {
+        if (!multiplayerMode) {
+            System.out.println("Cannot Bind Grid Events, as game is not in multiplayer mode");
+            return;
+        }
+
+        for (var row : view.getGrid()) {
+            for (var button : row) {
+                button.addActionListener(e -> {
+                    view.setAlertLabel(null);
+
+                    try {
+                        if (isMyTurn) {
+                            int choice = Integer.parseInt(button.getText());
+                            boolean moveSent = network.send(choice);
+                            if (moveSent) {
+                                game.play(choice);
+                                isMyTurn = false;
+                            }
+                        }
+                        if (!isMyTurn) {
+                            int player2Choice = network.receive();
+                            if (player2Choice != -1) {
+                                game.play(player2Choice);
+                                isMyTurn = true;
+                            }
+                        }
                     } catch (Exception exception) {
                         view.setAlertLabel("<html><center>Invalid Input!<br>Box already marked</center></html>");
                     }
@@ -98,7 +211,7 @@ public class GameController {
                     view.setScoreLabel(game.getScore());
                     view.updateInfoLabel(); // Internally update itself to align with latest score and turn
 
-                    view.renderGameGrid(game);
+                    view.renderGameGrid();
                 });
             }
         }
