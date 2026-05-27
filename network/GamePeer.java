@@ -36,11 +36,13 @@ public abstract class GamePeer {
     public abstract boolean connect(String IP);
 
     public void disconnect() {
-        try {
-            if (socket != null)
-                socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (this != null) {
+            try {
+                if (socket != null)
+                    socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -8,37 +8,25 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 import javax.swing.JButton;
+import javax.swing.JToggleButton;
+import javax.swing.SwingUtilities;
 
 import model.Game;
+import model.NetworkState;
+import model.TurnState;
 import view.GameGUI;
 import network.GameClient;
 import network.GamePeer;
 import network.GameServer;
-
-enum ConnectionStatus {
-    SERVER_INIT,
-    CLIENT_INIT,
-    CONNECTED,
-    DISCONNECTED,
-    FAILED
-}
-
-enum TurnState {
-    YOUR_TURN,
-    WAITING_FOR_OPPONENT,
-    SENDING_MOVE,
-    PROCESSING_MOVE
-}
 
 public class GameController {
     private Game game;
     private GameGUI view;
     private GamePeer network;
 
-    ConnectionStatus networkState;
+    NetworkState networkState;
     TurnState turnState;
 
-    private boolean multiplayerMode = false;
     private boolean isMyTurn = false;
 
     public GameController(Game game, GameGUI view) {
@@ -47,8 +35,9 @@ public class GameController {
 
         view.getWindow().addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                if (multiplayerMode)
+                if (network != null) {
                     network.disconnect();
+                }
             }
         });
 
@@ -56,12 +45,30 @@ public class GameController {
     }
 
     private void bindEvents() {
-        // bindGridEvents();
-        bindNetworkButtons();
-        bindResetButtonEvents();
+        bindGrid();
+        bindResetButton();
+        bindMultiplayerToggleButton();
     }
 
-    private void unbindGridEvents() {
+    private void bindMultiplayerEvents() {
+        bindMultiplayerGrid();
+        bindNetworkButtons(); // TBA, WIP
+        bindResetButton(); // TBA, WIP
+    }
+
+    private void unbindEvents() {
+        unbindGrid();
+        unbindNetworkButtons();
+        unbindResetButton();
+    }
+
+    // Util
+    private void setNetworkState(NetworkState state) {
+        this.networkState = state;
+        view.updateNetworkState(state, network.getIP());
+    }
+
+    private void unbindGrid() {
         // Remove all listeners from grid
         for (var row : view.getGrid()) {
             for (var button : row) {
@@ -71,79 +78,132 @@ public class GameController {
         }
     }
 
-    private void bindResetButtonEvents() {
+    private void unbindNetworkButtons() {
+        JButton clientButton = view.getClientButton();
+        JButton serverButton = view.getServerButton();
+
+        for (ActionListener al : clientButton.getActionListeners())
+            clientButton.removeActionListener(al);
+
+        for (ActionListener al : serverButton.getActionListeners())
+            serverButton.removeActionListener(al);
+    }
+
+    private void unbindResetButton() {
+        JButton button = view.getReseButton();
+        for (ActionListener al : button.getActionListeners())
+            button.removeActionListener(al);
+    }
+
+    private void bindResetButton() {
         view.getReseButton().addActionListener(e -> {
 
-            System.out.println("Single Player[1] | Multiplayer [2]: ");
-            Scanner sc = new Scanner(System.in);
-            int choice = sc.nextInt();
-            sc.close();
-
-            if (choice == 1) {
-                if (multiplayerMode) {
-                    network.disconnect();
-                    multiplayerMode = false;
-                }
-                unbindGridEvents();
-                bindGridEvents();
-            }
-
-            if (choice == 2) {
-                unbindGridEvents();
-                bindMultiplayerGridEvents();
-            }
+            unbindEvents();
+            bindEvents();
 
             game.play(0);
             view.resetGridColors();
             view.setAlertLabel(null);
-            view.renderGameGrid();
+            view.updateGameGrid();
         });
     }
 
+    private void bindMultiplayerResetButton() {
+
+        network.disconnect();
+
+        unbindEvents();
+        bindMultiplayerEvents();
+
+        game.play(0);
+        view.setAlertLabel(null);
+        view.resetGridColors();
+        view.update();
+    }
+
     private void bindNetworkButtons() {
-
         view.getServerButton().addActionListener(e -> {
-            network.disconnect();
-            network = new GameServer();
-
-            view.setAlertLabel("<html><center>Waiting for client.<br>IP: " + network.getIP() + "</center></html>");
-
-            boolean connected = network.connect(null);
-            if (connected) {
-                view.setAlertLabel("<html><center>Connected...<br>Make first move.</center></html>");
-                multiplayerMode = true;
-                isMyTurn = true;
-                bindMultiplayerGridEvents();
-            }
+            initServer();
         });
 
         view.getClientButton().addActionListener(e -> {
+            initClient();
+        });
+    }
 
-            network = new GameClient();
+    private void initClient() {
+        network.disconnect();
+        network = new GameClient();
+        setNetworkState(NetworkState.CLIENT_INIT);
 
+        new Thread(() -> {
             Scanner sc = new Scanner(System.in);
-
-            boolean connected = false;
             String IP = "";
 
+            boolean connected = false;
             while (!connected) {
                 System.out.print("Enter Server IP to Connect to: ");
                 IP = sc.next();
 
                 connected = network.connect(IP);
                 if (connected) {
-                    view.setAlertLabel(
-                            "<html><center>Successfully connected to.<br>Server IP: " + IP +
-                                    "</center></html>");
-                    multiplayerMode = true;
-                    bindMultiplayerGridEvents();
+                    SwingUtilities.invokeLater(() -> {
+                        setNetworkState(NetworkState.CONNECTED);
+                    });
                 }
             }
             sc.close();
+        }).start();
+
+    }
+
+    private void bindMultiplayerToggleButton() {
+        JToggleButton btn = view.getMultiplayerToggleButton();
+        btn.addActionListener(e -> {
+            toggleMultiplayer(btn.isSelected());
         });
     }
 
-    private void bindGridEvents() {
+    private void toggleMultiplayer(boolean isEnabled) {
+        view.getClientButton().setVisible(isEnabled);
+        view.getServerButton().setVisible(isEnabled);
+
+        if (isEnabled) {
+            networkState = NetworkState.MULTIPLAYER_INIT;
+            unbindEvents();
+            bindMultiplayerEvents();
+        } else {
+            networkState = NetworkState.DISCONNECTED;
+            unbindEvents();
+            bindEvents();
+            if (network != null) {
+                network.disconnect();
+            }
+        }
+    }
+
+    private void initServer() {
+        network.disconnect();
+        network = new GameServer();
+        setNetworkState(NetworkState.SERVER_INIT);
+
+        new Thread(() -> {
+            boolean connected = network.connect(null);
+
+            // Invoke later makes use of EDT and prevents UI glitching
+            SwingUtilities.invokeLater(() -> {
+                if (connected) {
+                    setNetworkState(NetworkState.CONNECTED);
+                    toggleMultiplayer(true);
+                    isMyTurn = true;
+                } else {
+                    setNetworkState(NetworkState.FAILED);
+                }
+            });
+        }).start();
+    }
+
+    private void bindGrid() {
         for (var row : view.getGrid()) {
             for (var button : row) {
                 button.addActionListener(e -> {
@@ -166,18 +226,13 @@ public class GameController {
 
                     view.updateInfoLabel(); // Internally update itself to align with latest score and turn
 
-                    view.renderGameGrid();
+                    view.updateGameGrid();
                 });
             }
         }
     }
 
-    private void bindMultiplayerGridEvents() {
-        if (!multiplayerMode) {
-            System.out.println("Cannot Bind Grid Events, as game is not in multiplayer mode");
-            return;
-        }
-
+    private void bindMultiplayerGrid() {
         for (var row : view.getGrid()) {
             for (var button : row) {
                 button.addActionListener(e -> {
@@ -211,7 +266,7 @@ public class GameController {
                     view.setScoreLabel(game.getScore());
                     view.updateInfoLabel(); // Internally update itself to align with latest score and turn
 
-                    view.renderGameGrid();
+                    view.updateGameGrid();
                 });
             }
         }
