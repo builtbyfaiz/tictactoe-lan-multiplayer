@@ -3,8 +3,7 @@ package network;
 import java.io.IOException;
 import java.net.*;
 
-import javax.swing.SwingUtilities;
-
+/// Game class responsible for creating, and establishing the server socket
 public class GameServer extends GamePeer {
 
     ServerSocket server;
@@ -18,6 +17,7 @@ public class GameServer extends GamePeer {
         }
     }
 
+    /// Try connecting to any incoming client, IP arg is redundant
     public boolean connect(String IP) {
         try {
             socket = server.accept();

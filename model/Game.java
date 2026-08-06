@@ -1,5 +1,6 @@
 package model;
 
+/// The underlying console implementation of tictactoe underpinning the GUI
 public class Game {
 
     private char grid_[][] = {{ '1', '2', '3' },

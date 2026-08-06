@@ -7,6 +7,7 @@ import javax.swing.border.Border;
 import model.Game;
 import model.NetworkState;
 
+/// Renders game state in GUI window
 public class GameGUI {
 
     // Variable Declarations
@@ -20,18 +21,20 @@ public class GameGUI {
     private JPanel gameArea  = new JPanel(new GridBagLayout());
     private JButton[][] grid = new JButton[3][3];
 
-    //Side Bar Components
+    // --- Side Bar Components ---
+    // Labels
     private JLabel infoLabel  = new JLabel();
     private JLabel alertLabel = new JLabel();
     private JLabel scoreLabel = new JLabel("Score: 0-0");
     private JLabel turnLabel  = new JLabel("Turn: Player-1");
 
-    private JCheckBox multiplayerToggleButton = new JCheckBox("Multiplayer");
-
+    // Buttons
     private JButton resetbutton   = new JButton("RESET");
     private JButton clientbutton  = new JButton("Client");
     private JButton serverbutton  = new JButton("Server");
     private JPanel networkbuttons = new JPanel(new GridBagLayout());
+    
+    private JCheckBox multiplayerToggleButton = new JCheckBox("Multiplayer");
 
     // Color Pallete
     Color appBgMain      = new Color(6, 6, 19);
@@ -64,24 +67,24 @@ public class GameGUI {
         frame.setVisible(true);
     }
 
-    // Getter/Seters
+    // --- Getter/Setters ---
     public JFrame    getWindow() { return frame; }
     public JButton[][] getGrid() { return grid;  }
 
-    // public JButton getResebutton()   { return resetbutton;  }
-    public JButton getReseButton()   { return resetbutton;  }
+    public JButton getResetButton()  { return resetbutton;  }
     public JButton getServerButton() { return serverbutton; }
     public JButton getClientButton() { return clientbutton; }
-    public JToggleButton getMultiplayerToggleButton() { return multiplayerToggleButton; }
+    public JToggleButton getToggleMultiplayerButton() { return multiplayerToggleButton; }
 
-    public void setTurnLabel(String text)  { turnLabel.setText(text);  }
+    public void setTurnLabel (String text) { turnLabel .setText(text);  }
     public void setScoreLabel(String text) { scoreLabel.setText(text); }
     public void setAlertLabel(String text) { alertLabel.setText(text); }
 
+    // --- Update Funcs: Refresh Gui 
     public void updateInfoLabel() {
         infoLabel.setText("<html><center>"
                           + scoreLabel.getText() + "<br>"
-                          + turnLabel.getText()  +
+                          + turnLabel .getText() +
                           "</center></html>");
     }
 
@@ -109,6 +112,7 @@ public class GameGUI {
         updateGameGrid();
     }
 
+    // --- Initializers ---
     private void initWindow() {
         frame.setSize(windowWidth, windowHeight);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -197,6 +201,15 @@ public class GameGUI {
         clientbutton.setFocusPainted(false);
     }
 
+    private void initResetbutton() {
+        // Reset Button
+        resetbutton.setFont(new Font(Font.DIALOG, Font.BOLD, 32));
+        resetbutton.setBackground(buttonResetBg);
+        resetbutton.setForeground(buttonResetText);
+        resetbutton.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
+        resetbutton.setFocusPainted(false);
+    }
+
     private void initInfoLabel() {
         // Score + Turn Label
         infoLabel = new JLabel("<html><center>"
@@ -209,15 +222,6 @@ public class GameGUI {
         infoLabel.setForeground(primary);
     }
 
-    private void initResetbutton() {
-        // Reset Button
-        resetbutton.setFont(new Font(Font.DIALOG, Font.BOLD, 32));
-        resetbutton.setBackground(buttonResetBg);
-        resetbutton.setForeground(buttonResetText);
-        resetbutton.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
-        resetbutton.setFocusPainted(false);
-    }
-
     private void initAlertLabel() {
         // Win/Invalid Condition Label
         alertLabel.setForeground(Color.white); 
@@ -225,6 +229,7 @@ public class GameGUI {
         alertLabel.setHorizontalAlignment(SwingConstants.CENTER);
     }
     
+    // GUI Utils
     public void resetGridColors() {
         for (var row : grid) {
             for (var button : row) {
