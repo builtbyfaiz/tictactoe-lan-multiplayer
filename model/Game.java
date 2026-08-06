@@ -35,7 +35,7 @@ public class Game {
     }
 
     /**
-     * Executes a full move cycle: input handling, rendering, and win checking.
+     * Executes a full move cycle: input handling, processing and win checking.
      *
      * @param choice player input (1–9 grid position or 0 for reset)
      */

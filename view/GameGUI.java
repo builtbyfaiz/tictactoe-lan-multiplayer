@@ -82,10 +82,16 @@ public class GameGUI {
 
     // --- Update Funcs: Refresh Gui 
     public void updateInfoLabel() {
+
+        setTurnLabel("Turn: Player-" + game.getTurn());
+        setScoreLabel(game.getScore());
+
         infoLabel.setText("<html><center>"
                           + scoreLabel.getText() + "<br>"
                           + turnLabel .getText() +
                           "</center></html>");
+
+        infoLabel.repaint();
     }
 
     public void updateGameGrid() {

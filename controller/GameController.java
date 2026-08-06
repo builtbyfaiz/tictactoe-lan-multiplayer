@@ -106,7 +106,10 @@ public class GameController {
             game.play(0);
             view.resetGridColors();
             view.setAlertLabel(null);
+            view.updateInfoLabel();
+            // view.
             view.updateGameGrid();
+            
         });
     }
 
