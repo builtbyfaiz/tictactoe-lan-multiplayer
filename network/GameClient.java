@@ -17,4 +17,17 @@ public class GameClient extends GamePeer {
             return false;
         }
     }
+
+    /// Disconnect connection and close sockets
+    public void disconnect() {
+        if (this != null) {
+            try {
+                if (socket != null)
+                    socket.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Error Disconnecting our server");
+            }
+        }
+    }
 }

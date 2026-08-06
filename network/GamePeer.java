@@ -36,17 +36,7 @@ public abstract class GamePeer {
 
     /// Client/Server will handle there own connection implementation.
     public abstract boolean connect(String IP);
-
-    public void disconnect() {
-        if (this != null) {
-            try {
-                if (socket != null)
-                    socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
+    public abstract void disconnect();
 
     /// Returns local IP which the client can connect to.
     public String getIP() {
