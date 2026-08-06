@@ -55,8 +55,8 @@ public class GameController {
 
     private void bindMultiplayerEvents() {
         bindMultiplayerGrid();
+        bindResetButton();
         bindNetworkButtons();  
-        bindMultiplayerResetButton();
     }
 
     private void unbindEvents() {
@@ -153,19 +153,6 @@ public class GameController {
                 });
             }
         }
-    }
-
-    private void bindMultiplayerResetButton() {
-        if (network != null)
-            network.disconnect();
-
-        unbindEvents();
-        bindMultiplayerEvents();
-
-        game.play(0);
-        view.setAlertLabel(null);
-        view.resetGridColors();
-        view.update();
     }
     
     private void bindNetworkButtons() {
