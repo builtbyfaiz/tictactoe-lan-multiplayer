@@ -57,12 +57,14 @@ public class GameController {
         bindMultiplayerGrid();
         bindResetButton();
         bindNetworkButtons();  
+        bindMultiplayerToggleButton();
     }
 
     private void unbindEvents() {
         unbindGrid();
         unbindNetworkButtons();
         unbindResetButton();
+        unbindToggleMultiplayerButton();
     }
 
     // Bind Single Player
@@ -179,10 +181,12 @@ public class GameController {
 
         if (isEnabled) {
             networkState = NetworkState.MULTIPLAYER_INIT;
+            view.getResetButton().doClick();
             unbindEvents();
             bindMultiplayerEvents();
         } else {
             networkState = NetworkState.DISCONNECTED;
+            view.getResetButton().doClick();
             unbindEvents();
             bindEvents();
             if (network != null) {
@@ -281,6 +285,12 @@ public class GameController {
 
     private void unbindResetButton() {
         JButton button = view.getResetButton();
+        for (ActionListener al : button.getActionListeners())
+            button.removeActionListener(al);
+    }
+
+    private void unbindToggleMultiplayerButton() {
+        JToggleButton button = view.getToggleMultiplayerButton();
         for (ActionListener al : button.getActionListeners())
             button.removeActionListener(al);
     }
