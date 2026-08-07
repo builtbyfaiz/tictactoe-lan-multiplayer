@@ -264,7 +264,7 @@ public class GameGUI {
                 break;
 
             case DISCONNECTED:
-                setAlertLabel("<html><center>Disconnected Successfully.<br>Now playing Singleplayer</center></html>");
+                setAlertLabel("<html><center>Disconnected Successfully.</center></html>");
                 break;
 
             default:

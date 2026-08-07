@@ -16,8 +16,10 @@ public abstract class GamePeer {
             System.out.println("Sent: " + data);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Error sending your move to opponent.");
+            if(!socket.isClosed()) {
+                e.printStackTrace();
+                System.err.println("Error sending your move to opponent.");
+            }
             return false;
         }
     }

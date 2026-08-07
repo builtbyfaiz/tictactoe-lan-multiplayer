@@ -19,12 +19,14 @@ import network.GameServer;
 
 /// Manager class acting as middleman between GUI, Main, and Network
 public class GameController {
-    private Game game;         // Console implementation
-    private GameGUI view;      // Gui render of the game state
+    private Game     game;     // Console implementation
+    private GameGUI  view;     // Gui render of the game state
     private GamePeer network;  // Responsible for connectivity
 
-    private NetworkState networkState;
     private TurnState turnState;
+    private NetworkState networkState;
+
+    private Scanner sc = new Scanner(System.in);
 
     public GameController(Game game, GameGUI view) {
         this.game = game;
@@ -50,12 +52,13 @@ public class GameController {
     private void bindEvents() {
         bindGrid();
         bindResetButton();
+        bindNetworkButtons();  
         bindMultiplayerToggleButton();
     }
 
     private void bindMultiplayerEvents() {
         bindMultiplayerGrid();
-        bindResetButton();
+        bindMultiplayerResetButton();
         bindNetworkButtons();  
         bindMultiplayerToggleButton();
     }
@@ -74,7 +77,6 @@ public class GameController {
                 button.addActionListener(e -> {
 
                     view.setAlertLabel(null);
-
                     try {
                         int choice = Integer.parseInt(button.getText());
                         game.play(choice);
@@ -86,11 +88,7 @@ public class GameController {
                         view.setAlertLabel("<html><center>Player " + game.getTurn()
                                 + " Won!<br>Please Reset Game</center></html>");
 
-                    view.setTurnLabel("Turn: Player-" + game.getTurn());
-                    view.setScoreLabel(game.getScore());
-
                     view.updateInfoLabel(); // Internally update itself to align with latest score and turn
-
                     view.updateGameGrid();
                 });
             }
@@ -98,19 +96,38 @@ public class GameController {
     }
     
     private void bindResetButton() {
+        view.getResetButton().addActionListener(e -> {resetGame();});}
+
+    private void resetGame() {
+        unbindEvents();
+        bindEvents();
+
+        game.play(0);
+        view.resetGridColors();
+        view.setAlertLabel(null);
+        view.updateInfoLabel();
+        view.updateGameGrid();
+    }
+
+    private void bindMultiplayerResetButton() {
         view.getResetButton().addActionListener(e -> {
-
-            unbindEvents();
-            bindEvents();
-
-            game.play(0);
-            view.resetGridColors();
-            view.setAlertLabel(null);
-            view.updateInfoLabel();
-            // view.
-            view.updateGameGrid();
-            
+            resetMultiplayerGame();
         });
+    }
+
+    private void resetMultiplayerGame() {
+        unbindEvents();
+        bindMultiplayerEvents();
+
+        game.play(0);
+
+        // if(network!=null)
+        //     network.send(0);
+
+        view.resetGridColors();
+        view.setAlertLabel(null);
+        view.updateInfoLabel();
+        view.updateGameGrid();
     }
 
     // Bind Multi Player
@@ -150,10 +167,7 @@ public class GameController {
                         view.setAlertLabel("<html><center>Player " + game.getTurn()
                                 + " Won!<br>Please Reset Game</center></html>");
 
-                    view.setTurnLabel("Turn: Player-" + game.getTurn());
-                    view.setScoreLabel(game.getScore());
                     view.updateInfoLabel(); // Internally update itself to align with latest score and turn
-
                     view.updateGameGrid();
                 });
             }
@@ -184,17 +198,10 @@ public class GameController {
 
         if (isEnabled) {
             networkState = NetworkState.MULTIPLAYER_INIT;
-            view.getResetButton().doClick();
-            unbindEvents();
-            bindMultiplayerEvents();
+            resetMultiplayerGame();
         } else {
             networkState = NetworkState.DISCONNECTED;
-            view.getResetButton().doClick();
-            unbindEvents();
-            bindEvents();
-            if (network != null) {
-                network.disconnect();
-            }
+            resetGame();
         }
     }
     
@@ -205,8 +212,7 @@ public class GameController {
         setNetworkState(NetworkState.CLIENT_INIT);
         turnState = TurnState.WAITING_FOR_OPPONENT;
 
-        new Thread(() -> {
-            Scanner sc = new Scanner(System.in);
+        new Thread(() -> { // New thread to prevent System.in blocking program, (#TODO use GUI input)
             String IP = "";
 
             boolean connected = false;
@@ -218,6 +224,7 @@ public class GameController {
                 if (connected) {
                     SwingUtilities.invokeLater(() -> {
                         setNetworkState(NetworkState.CONNECTED);
+                        toggleMultiplayer(true);
                         if (turnState == TurnState.WAITING_FOR_OPPONENT) {
                             new Thread(() -> {
                                 int move = network.receive();
@@ -233,7 +240,7 @@ public class GameController {
                     });
                 }
             }
-            sc.close();
+            // sc.close();
         }).start();
     }
 
@@ -252,8 +259,6 @@ public class GameController {
                     setNetworkState(NetworkState.CONNECTED);
                     toggleMultiplayer(true);
                     turnState = TurnState.MY_TURN;
-                } else {
-                    setNetworkState(NetworkState.FAILED);
                 }
             });
         }).start();

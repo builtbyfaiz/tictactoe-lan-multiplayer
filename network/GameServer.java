@@ -9,9 +9,11 @@ public class GameServer extends GamePeer {
     ServerSocket server;
 
     private void openServer() {
+        if(server != null)
+            disconnect();
         try {
-            server = new ServerSocket(8080); // New Connection Listener on the port
-        } catch (IOException e) {
+            this.server = new ServerSocket(8080); // New Connection Listener on the port
+        } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Error opening server.");
         }
@@ -22,7 +24,6 @@ public class GameServer extends GamePeer {
         try {
             openServer();
             socket = server.accept();
-            server.close();
             System.out.println("Player 2 has connected.");
             return true;
         } catch (IOException e) {
@@ -38,10 +39,11 @@ public class GameServer extends GamePeer {
     public void disconnect() {
         if (this != null) {
             try {
-                if (socket != null)
-                    socket.close();
-                if (server != null)
-                    server.close();
+                if (super.socket != null)
+                    super.socket.close();
+                if (this.server != null)
+                    this.server.close();
+                System.out.println("Disconnected Successfully"); // Debug
             } catch (Exception e) {
                 e.printStackTrace();
                 System.out.println("Error Disconnecting our server");
