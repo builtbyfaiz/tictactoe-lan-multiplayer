@@ -153,6 +153,10 @@ public class GameController {
                                     SwingUtilities.invokeLater(() -> {
                                         game.play(move);
                                         view.update();
+                                        view.updateGameGrid();
+                                        if (game.win)
+                                            view.setAlertLabel("<html><center>Player " + game.getTurn()
+                                                    + " Won!<br>Please Reset Game</center></html>");
                                         turnState = TurnState.MY_TURN;
                                     });
                                 }
@@ -163,8 +167,7 @@ public class GameController {
                         view.setAlertLabel("<html><center>Invalid Input!<br>Box already marked</center></html>");
                     }
 
-                    if (game.win)
-                        view.setAlertLabel("<html><center>Player " + game.getTurn()
+                    if (game.win) view.setAlertLabel("<html><center>Player " + game.getTurn()
                                 + " Won!<br>Please Reset Game</center></html>");
 
                     view.updateInfoLabel(); // Internally update itself to align with latest score and turn

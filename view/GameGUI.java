@@ -115,6 +115,7 @@ public class GameGUI {
     }
 
     public void update() {
+        updateInfoLabel();
         updateGameGrid();
     }
 
