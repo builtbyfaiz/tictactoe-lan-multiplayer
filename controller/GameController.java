@@ -1,17 +1,14 @@
 package controller;
 
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Scanner;
 
 import javax.swing.JButton;
-import javax.swing.JToggleButton;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import model.Game;
 import model.NetworkState;
-import model.TurnState;
 import view.GameGUI;
 import network.GameClient;
 import network.GamePeer;
@@ -19,14 +16,16 @@ import network.GameServer;
 
 /// Manager class acting as middleman between GUI, Main, and Network
 public class GameController {
-    private Game     game;     // Console implementation
-    private GameGUI  view;     // Gui render of the game state
-    private GamePeer network;  // Responsible for connectivity
 
-    private TurnState turnState;
-    private NetworkState networkState;
+    private static final String INVALID_MOVE_MSG = "<html><center>Invalid Input!<br>Box already marked</center></html>";
 
-    private Scanner sc = new Scanner(System.in);
+    private final Game game;     // Console implementation
+    private final GameGUI view;  // GUI render of the game state
+
+    private GamePeer network;         // Active connection, null when not in multiplayer
+    private boolean multiplayerMode;  // State of multiplayer
+    private boolean isServer;         // Server is always X and moves first
+    private boolean myTurn;           // If it is turn of current instance
 
     public GameController(Game game, GameGUI view) {
         this.game = game;
@@ -38,271 +37,202 @@ public class GameController {
         // Close network connection to free the port for next time
         view.getWindow().addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                if (network != null) {
+                if (network != null)
                     network.disconnect();
-                }
             }
         });
 
-        bindEvents();
-    }
-
-    // --- Binder Functions: Connect GUI buttons to their actions ---
-
-    private void bindEvents() {
         bindGrid();
         bindResetButton();
-        bindNetworkButtons();  
-        bindMultiplayerToggleButton();
+        bindNetworkButtons();
+        bindToggleMultiplayerButton();
     }
 
-    private void bindMultiplayerEvents() {
-        bindMultiplayerGrid();
-        bindMultiplayerResetButton();
-        bindNetworkButtons();  
-        bindMultiplayerToggleButton();
-    }
+    // --- Binding Functions ---
 
-    private void unbindEvents() {
-        unbindGrid();
-        unbindNetworkButtons();
-        unbindResetButton();
-        unbindToggleMultiplayerButton();
-    }
-
-    // Bind Single Player
     private void bindGrid() {
         for (var row : view.getGrid()) {
             for (var button : row) {
-                button.addActionListener(e -> {
-
-                    view.setAlertLabel(null);
-                    try {
-                        int choice = Integer.parseInt(button.getText());
-                        game.play(choice);
-                    } catch (Exception exception) {
-                        view.setAlertLabel("<html><center>Invalid Input!<br>Box already marked</center></html>");
-                    }
-
-                    if (game.win)
-                        view.setAlertLabel("<html><center>Player " + game.getTurn()
-                                + " Won!<br>Please Reset Game</center></html>");
-
-                    view.updateInfoLabel(); // Internally update itself to align with latest score and turn
-                    view.updateGameGrid();
-                });
+                button.addActionListener(e -> onCellClicked(button));
             }
         }
     }
-    
+
     private void bindResetButton() {
-        view.getResetButton().addActionListener(e -> {resetGame();});}
+        view.getResetButton().addActionListener(e -> onResetClicked());
+    }
+
+    private void bindNetworkButtons() {
+        view.getServerButton().addActionListener(e -> initServer());
+        view.getClientButton().addActionListener(e -> initClient());
+    }
+
+    private void bindToggleMultiplayerButton() {
+        view.getToggleMultiplayerButton()
+                .addActionListener(e -> setMultiplayerMode(view.getToggleMultiplayerButton().isSelected()));
+    }
+
+    // --- Gameplay ---
+    private void onCellClicked(JButton button) {
+        if (multiplayerMode && (!myTurn || game.win))
+            return;
+
+        view.setAlertLabel(null);
+        int choice;
+        try {
+            choice = Integer.parseInt(button.getText());
+            game.play(choice);
+        } catch (Exception e) {
+            view.setAlertLabel(INVALID_MOVE_MSG);
+            return;
+        }
+
+        updateView();
+        if (game.win) showWinMessage();
+
+        if (multiplayerMode) {
+            if (!network.send(choice)) {
+                handleDisconnect();
+                return;
+            }
+            myTurn = false;
+
+            if (!game.win) {
+                listenForOpponentMove();
+            } 
+            if (game.win && !isServer) {
+                // Client spawns last thread to listen for 0/-1 reset signal
+                listenForOpponentMove();
+            }
+        }
+    }
+
+    private void onResetClicked() {
+        if (!multiplayerMode) {
+            resetGame();
+            return;
+        }
+
+        // Multiplayer: Only if game end + instance is server.
+        if (isServer && game.win) {
+            resetGame();
+            network.send(0); // Send 0 to client to reset it's game as well
+            myTurn = true;
+        }
+    }
 
     private void resetGame() {
-        unbindEvents();
-        bindEvents();
-
         game.play(0);
         view.resetGridColors();
         view.setAlertLabel(null);
-        view.updateInfoLabel();
-        view.updateGameGrid();
-    }
-
-    private void bindMultiplayerResetButton() {
-        view.getResetButton().addActionListener(e -> {
-            resetMultiplayerGame();
-        });
-    }
-
-    private void resetMultiplayerGame() {
-        unbindEvents();
-        bindMultiplayerEvents();
-
-        game.play(0);
-
-        // if(network!=null)
-        //     network.send(0);
-
-        view.resetGridColors();
-        view.setAlertLabel(null);
-        view.updateInfoLabel();
-        view.updateGameGrid();
-    }
-
-    // Bind Multi Player
-    private void bindMultiplayerGrid() {
-        for (var row : view.getGrid()) {
-            for (var button : row) {
-                button.addActionListener(e -> {
-                    view.setAlertLabel(null);
-
-                    try {
-                        if (turnState == TurnState.MY_TURN) {
-                            int choice = Integer.parseInt(button.getText());
-                            if (network.send(choice)) {
-                                game.play(choice);
-                                view.update();
-                                turnState = TurnState.MOVE_SENT;
-                            }
-                        }
-                        if (turnState == TurnState.MOVE_SENT) {
-                            new Thread(() -> {
-                                int move = network.receive();
-                                if (move != -1) {
-                                    SwingUtilities.invokeLater(() -> {
-                                        game.play(move);
-                                        view.update();
-                                        view.updateGameGrid();
-                                        if (game.win)
-                                            view.setAlertLabel("<html><center>Player " + game.getTurn()
-                                                    + " Won!<br>Please Reset Game</center></html>");
-                                        turnState = TurnState.MY_TURN;
-                                    });
-                                }
-                            }).start();
-                            turnState = TurnState.WAITING_FOR_OPPONENT;
-                        }
-                    } catch (Exception exception) {
-                        view.setAlertLabel("<html><center>Invalid Input!<br>Box already marked</center></html>");
-                    }
-
-                    if (game.win) view.setAlertLabel("<html><center>Player " + game.getTurn()
-                                + " Won!<br>Please Reset Game</center></html>");
-
-                    view.updateInfoLabel(); // Internally update itself to align with latest score and turn
-                    view.updateGameGrid();
-                });
-            }
-        }
-    }
-    
-    private void bindNetworkButtons() {
-        view.getServerButton().addActionListener(e -> {
-            initServer();
-        });
-
-        view.getClientButton().addActionListener(e -> {
-            initClient();
-        });
-    }
-
-    private void bindMultiplayerToggleButton() {
-        JToggleButton btn = view.getToggleMultiplayerButton();
-        btn.addActionListener(e -> {
-            toggleMultiplayer(btn.isSelected());
-        });
-    }
-    
-    // Multiplayer Utils
-    private void toggleMultiplayer(boolean isEnabled) {
-        view.getClientButton().setVisible(isEnabled);
-        view.getServerButton().setVisible(isEnabled);
-
-        if (isEnabled) {
-            networkState = NetworkState.MULTIPLAYER_INIT;
-            resetMultiplayerGame();
-        } else {
-            networkState = NetworkState.DISCONNECTED;
-            resetGame();
-        }
-    }
-    
-    private void initClient() {
-        if (network != null)
-            network.disconnect();
-        network = new GameClient();
-        setNetworkState(NetworkState.CLIENT_INIT);
-        turnState = TurnState.WAITING_FOR_OPPONENT;
-
-        new Thread(() -> { // New thread to prevent System.in blocking program, (#TODO use GUI input)
-            String IP = "";
-
-            boolean connected = false;
-            while (!connected) {
-                System.out.print("Enter Server IP to Connect to: ");
-                IP = sc.next();
-
-                connected = network.connect(IP);
-                if (connected) {
-                    SwingUtilities.invokeLater(() -> {
-                        setNetworkState(NetworkState.CONNECTED);
-                        toggleMultiplayer(true);
-                        if (turnState == TurnState.WAITING_FOR_OPPONENT) {
-                            new Thread(() -> {
-                                int move = network.receive();
-                                if (move != -1) {
-                                    SwingUtilities.invokeLater(() -> {
-                                        game.play(move);
-                                        view.update();
-                                        turnState = TurnState.MY_TURN;
-                                    });
-                                }
-                            }).start();
-                        }
-                    });
-                }
-            }
-            // sc.close();
-        }).start();
+        updateView();
     }
 
     private void initServer() {
         if (network != null)
             network.disconnect();
         network = new GameServer();
-        setNetworkState(NetworkState.SERVER_INIT);
+        isServer = true;
+        view.updateNetworkState(NetworkState.SERVER_INIT, network.getIP());
 
         new Thread(() -> {
             boolean connected = network.connect(null);
-
-            // Invoke later makes use of EDT and prevents UI glitching
-            SwingUtilities.invokeLater(() -> {
-                if (connected) {
-                    setNetworkState(NetworkState.CONNECTED);
-                    toggleMultiplayer(true);
-                    turnState = TurnState.MY_TURN;
-                }
-            });
+            if (connected) {
+                SwingUtilities.invokeLater(() -> {
+                    view.updateNetworkState(NetworkState.CONNECTED, network.getIP());
+                    resetGame();
+                    myTurn = true; // server moves first
+                });
+            }
         }).start();
     }
- 
-    private void setNetworkState(NetworkState state) {
-        this.networkState = state;
-        view.updateNetworkState(state, network.getIP());
-    }
-    
-    // Unbind
-    private void unbindGrid() {
-        // Remove all listeners from grid
-        for (var row : view.getGrid()) {
-            for (var button : row) {
-                for (ActionListener al : button.getActionListeners())
-                    button.removeActionListener(al);
+
+    private void initClient() {
+        if (network != null) network.disconnect();
+        network  = new GameClient();
+        isServer = false;
+        view.updateNetworkState(NetworkState.CLIENT_INIT, null);
+
+        new Thread(() -> {
+            String ip = JOptionPane.showInputDialog(view.getWindow(), "Enter Server IP to connect to:");
+            boolean connected = network.connect(ip);
+
+            if (!connected) {
+                SwingUtilities.invokeLater(() -> view.setAlertLabel("Connection failed"));
+                return;
             }
+
+            SwingUtilities.invokeLater(() -> {
+                view.updateNetworkState(NetworkState.CONNECTED, network.getIP());
+                resetGame();
+                myTurn = false; // wait for server's first move
+            });
+            listenForOpponentMove();
+        }).start();
+    }
+
+    // --- Multiplayer Utils ---
+    private void setMultiplayerMode(boolean enabled) {
+        multiplayerMode = enabled;
+        myTurn = false;
+
+        view.getClientButton().setVisible(enabled);
+        view.getServerButton().setVisible(enabled);
+
+        // When enabling or disabling, flush the network
+        if (network != null) {
+            network.disconnect();
+            network = null;
         }
+
+        resetGame();
     }
 
-    private void unbindNetworkButtons() {
-        JButton clientButton = view.getClientButton();
-        JButton serverButton = view.getServerButton();
+    private void listenForOpponentMove() {
+        new Thread(() -> {
+            int move = network.receive();
 
-        for (ActionListener al : clientButton.getActionListeners())
-            clientButton.removeActionListener(al);
+            SwingUtilities.invokeLater(() -> {
+                if (move == -1) handleDisconnect();
+                else            applyRemoteMove(move);
+            });
 
-        for (ActionListener al : serverButton.getActionListeners())
-            serverButton.removeActionListener(al);
+        }).start();
     }
 
-    private void unbindResetButton() {
-        JButton button = view.getResetButton();
-        for (ActionListener al : button.getActionListeners())
-            button.removeActionListener(al);
+    private void applyRemoteMove(int move) {
+        if (move == 0) { // reset signal from server
+            resetGame();
+            myTurn = false;
+            listenForOpponentMove();
+            return;
+        }
+
+        game.play(move);
+        updateView();
+
+        if (game.win) { 
+            showWinMessage();
+            if (!isServer) listenForOpponentMove(); // wait for server's eventual 0/-1
+
+        } else 
+            myTurn = true;
     }
 
-    private void unbindToggleMultiplayerButton() {
-        JToggleButton button = view.getToggleMultiplayerButton();
-        for (ActionListener al : button.getActionListeners())
-            button.removeActionListener(al);
+    private void handleDisconnect() {
+        view.setAlertLabel("Opponent disconnected");
+        view.getToggleMultiplayerButton().setSelected(false);
+        setMultiplayerMode(false);
+    }
+
+    // --- View Utils ---
+    private void updateView() {
+        view.updateInfoLabel();
+        view.updateGameGrid();
+    }
+
+    private void showWinMessage() {
+        view.setAlertLabel("<html><center>Player " + game.getTurn()
+                + " Won!<br>Please Reset Game</center></html>");
     }
 }

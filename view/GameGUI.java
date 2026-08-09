@@ -259,14 +259,6 @@ public class GameGUI {
             case CONNECTED:
                 setAlertLabel("<html><center>Connected Successfully.</center></html>");
                 break;
-        
-            case FAILED:
-                setAlertLabel("Something Went Wrong.");
-                break;
-
-            case DISCONNECTED:
-                setAlertLabel("<html><center>Disconnected Successfully.</center></html>");
-                break;
 
             default:
                 break;

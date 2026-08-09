@@ -11,6 +11,8 @@ public abstract class GamePeer {
 
     public boolean send(int data) {
         try {
+            if(socket==null) return false;
+
             socket.getOutputStream().write(data); // Write to stream.
             socket.getOutputStream().flush();     // Force send any remaining data then clear stream.
             System.out.println("Sent: " + data);
