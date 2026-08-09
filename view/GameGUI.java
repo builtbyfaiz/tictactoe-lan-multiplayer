@@ -181,6 +181,7 @@ public class GameGUI {
         initAlertLabel();
         initResetbutton();
         initNetworkbuttons();
+        initMultiplayerToggle();
         
         sidebar.add(logo);
         sidebar.add(multiplayerToggleButton);
@@ -206,6 +207,17 @@ public class GameGUI {
 
         clientbutton.setBorder(cyanBorder);
         clientbutton.setFocusPainted(false);
+    }
+    
+    private void initMultiplayerToggle() {
+        // Same look as the Server/Client buttons: font, background, border weight
+        multiplayerToggleButton.setText("Multiplayer");
+        multiplayerToggleButton.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
+        multiplayerToggleButton.setBackground(appBgSidebar);
+        multiplayerToggleButton.setForeground(buttonResetBg);
+        multiplayerToggleButton.setHorizontalAlignment(SwingConstants.CENTER);
+        multiplayerToggleButton.setFocusPainted(false);
+        multiplayerToggleButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     private void initResetbutton() {
