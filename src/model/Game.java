@@ -1,4 +1,4 @@
-package model;
+package src.model;
 
 /// The underlying console implementation of tictactoe underpinning the GUI
 public class Game {

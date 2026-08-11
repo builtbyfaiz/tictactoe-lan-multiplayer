@@ -1,4 +1,4 @@
-package controller;
+package src.controller;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -7,12 +7,12 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import model.Game;
-import model.NetworkState;
-import view.GameGUI;
-import network.GameClient;
-import network.GamePeer;
-import network.GameServer;
+import src.model.Game;
+import src.model.NetworkState;
+import src.network.GameClient;
+import src.network.GamePeer;
+import src.network.GameServer;
+import src.view.GameGUI;
 
 /// Manager class acting as middleman between GUI, Main, and Network
 public class GameController {

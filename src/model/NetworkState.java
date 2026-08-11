@@ -1,4 +1,4 @@
-package model;
+package src.model;
 
 /// Represents state of client/server connections over game lifetime
 public enum NetworkState {
