@@ -132,7 +132,7 @@ public class GameGUI {
                 int buttonNumber = (i * 3) + j + 1;
 
                 JButton button = new JButton(String.valueOf(buttonNumber));
-                button.setFont(new Font("Roboto", Font.BOLD, 72));
+                button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 0));
 
                 button.setBackground(appBgMain);
                 button.setHorizontalAlignment(SwingConstants.CENTER); // Makes button text centered #TEMP
@@ -173,7 +173,7 @@ public class GameGUI {
 
         // Logo
         JLabel logo = new JLabel("BY-FAIZ");
-        logo.setFont(new Font(Font.SERIF, Font.BOLD, 48));
+        logo.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 48));
         logo.setForeground(secondary);
         logo.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -197,7 +197,7 @@ public class GameGUI {
         networkbuttons.add(clientbutton);
 
         for (Component button : networkbuttons.getComponents()) {
-            button.setFont(new Font(Font.DIALOG, Font.BOLD, 16));
+            button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
             button.setBackground(appBgMain);
             button.setForeground(buttonResetText);
             button.setPreferredSize(new Dimension(100,50));
@@ -211,7 +211,7 @@ public class GameGUI {
     
     private void initMultiplayerToggle() {
         multiplayerToggleButton.setText("Multiplayer");
-        multiplayerToggleButton.setFont(new Font(Font.DIALOG, Font.BOLD, 24));
+        multiplayerToggleButton.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 24));
         multiplayerToggleButton.setBackground(appBgSidebar);
         multiplayerToggleButton.setForeground(buttonResetBg);
         multiplayerToggleButton.setHorizontalAlignment(SwingConstants.CENTER);
@@ -221,10 +221,10 @@ public class GameGUI {
 
     private void initResetbutton() {
         // Reset Button
-        resetbutton.setFont(new Font(Font.DIALOG, Font.BOLD, 32));
+        resetbutton.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 32));
         resetbutton.setBackground(buttonResetBg);
         resetbutton.setForeground(buttonResetText);
-        resetbutton.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
+        // resetbutton.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
         resetbutton.setFocusPainted(false);
     }
 
