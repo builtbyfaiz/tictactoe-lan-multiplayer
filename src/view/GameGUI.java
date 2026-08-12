@@ -132,8 +132,9 @@ public class GameGUI {
                 int buttonNumber = (i * 3) + j + 1;
 
                 JButton button = new JButton(String.valueOf(buttonNumber));
-                button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 0));
+                button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 72));
 
+                button.setForeground(Color.DARK_GRAY);
                 button.setBackground(appBgMain);
                 button.setHorizontalAlignment(SwingConstants.CENTER); // Makes button text centered #TEMP
                 button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
