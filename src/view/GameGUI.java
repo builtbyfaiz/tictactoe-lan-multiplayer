@@ -9,19 +9,49 @@ import src.model.NetworkState;
 
 /// Renders game state in GUI window
 public class GameGUI {
-
-    // Variable Declarations
+    
+    // --- Variable Declarations ---
     private final int windowWidth  = 800;
     private final int windowHeight = 600;
     
+    // Fonts
+    private final String FONT = Font.SANS_SERIF;
+
+    private final Font TINY_FONT   = new Font(FONT, Font.BOLD, 16);
+    private final Font SMALL_FONT  = new Font(FONT, Font.BOLD, 24);
+    private final Font MEDIUM_FONT = new Font(FONT, Font.BOLD, 32);
+    private final Font LARGE_FONT  = new Font(FONT, Font.BOLD, 48);
+    private final Font XLARGE_FONT = new Font(FONT, Font.BOLD, 72);
+    
+        // Color Pallete
+    Color appBgMain      = new Color(6, 6, 19);
+    Color appBgSidebar   = new Color(24, 18, 36);
+
+    Color primary        = new Color(0, 229, 255);
+    Color secondary      = new Color(234, 0, 154);
+    
+    Color buttonResetBg   = new Color(104, 21, 65);
+    Color buttonResetText = new Color(240, 240, 245);
+
+    Color primaryLight   = new Color(0, 114, 128);
+    Color secondaryLight = new Color(117, 0, 77);
+    
+    // Borders
+    Border cyanBorder    = BorderFactory.createLineBorder(primaryLight, 2);
+    Border pinkBorder    = BorderFactory.createLineBorder(secondaryLight, 2);
+
+    Border defaultBorder = BorderFactory.createLineBorder(Color.DARK_GRAY, 2);
+
+    // Game Regions
     private Game game;
     
     private JFrame frame     = new JFrame("TicTacToe By Faiz");
     private JPanel sidebar   = new JPanel(new GridLayout(6, 1, 2, 2));
     private JPanel gameArea  = new JPanel(new GridBagLayout());
     private JButton[][] grid = new JButton[3][3];
-
+    
     // --- Side Bar Components ---
+
     // Labels
     private JLabel infoLabel  = new JLabel();
     private JLabel alertLabel = new JLabel();
@@ -35,24 +65,6 @@ public class GameGUI {
     private JPanel networkbuttons = new JPanel(new GridBagLayout());
     
     private JCheckBox multiplayerToggleButton = new JCheckBox("Multiplayer");
-
-    // Color Pallete
-    Color appBgMain      = new Color(6, 6, 19);
-    Color appBgSidebar   = new Color(24, 18, 36);
-
-    Color primary        = new Color(0, 229, 255);
-    Color secondary      = new Color(234, 0, 154);
-
-    Color buttonResetBg     = new Color(104, 21, 65);
-    Color buttonResetText   = new Color(240, 240, 245);
-
-    Color primaryLight   = new Color(0, 114, 128);
-    Color secondaryLight = new Color(117, 0, 77);
-    
-    Border cyanBorder    = BorderFactory.createLineBorder(primaryLight, 2);
-    Border pinkBorder    = BorderFactory.createLineBorder(secondaryLight, 2);
-
-    Border defaultBorder = BorderFactory.createLineBorder(Color.DARK_GRAY, 2);
 
     // Contructor
     public GameGUI(Game game) {
@@ -76,7 +88,7 @@ public class GameGUI {
     public JButton getClientButton() { return clientbutton; }
     public JToggleButton getToggleMultiplayerButton() { return multiplayerToggleButton; }
 
-    public void setTurnLabel (String text) { turnLabel .setText(text);  }
+    public void setTurnLabel (String text) { turnLabel .setText(text); }
     public void setScoreLabel(String text) { scoreLabel.setText(text); }
     public void setAlertLabel(String text) { alertLabel.setText(text); }
 
@@ -132,7 +144,7 @@ public class GameGUI {
                 int buttonNumber = (i * 3) + j + 1;
 
                 JButton button = new JButton(String.valueOf(buttonNumber));
-                button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 72));
+                button.setFont(XLARGE_FONT);
 
                 button.setForeground(Color.DARK_GRAY);
                 button.setBackground(appBgMain);
@@ -174,7 +186,7 @@ public class GameGUI {
 
         // Logo
         JLabel logo = new JLabel("BY-FAIZ");
-        logo.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 48));
+        logo.setFont(LARGE_FONT);
         logo.setForeground(secondary);
         logo.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -198,7 +210,7 @@ public class GameGUI {
         networkbuttons.add(clientbutton);
 
         for (Component button : networkbuttons.getComponents()) {
-            button.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 16));
+            button.setFont(TINY_FONT);
             button.setBackground(appBgMain);
             button.setForeground(buttonResetText);
             button.setPreferredSize(new Dimension(100,50));
@@ -212,7 +224,7 @@ public class GameGUI {
     
     private void initMultiplayerToggle() {
         multiplayerToggleButton.setText("Multiplayer");
-        multiplayerToggleButton.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 24));
+        multiplayerToggleButton.setFont(SMALL_FONT);
         multiplayerToggleButton.setBackground(appBgSidebar);
         multiplayerToggleButton.setForeground(buttonResetBg);
         multiplayerToggleButton.setHorizontalAlignment(SwingConstants.CENTER);
@@ -222,7 +234,7 @@ public class GameGUI {
 
     private void initResetbutton() {
         // Reset Button
-        resetbutton.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 32));
+        resetbutton.setFont(MEDIUM_FONT);
         resetbutton.setBackground(buttonResetBg);
         resetbutton.setForeground(buttonResetText);
         // resetbutton.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
@@ -236,7 +248,7 @@ public class GameGUI {
                                + turnLabel.getText()  +
                                "</center></html>");
 
-        infoLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 32));
+        infoLabel.setFont(MEDIUM_FONT);
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         infoLabel.setForeground(primary);
     }
@@ -244,7 +256,7 @@ public class GameGUI {
     private void initAlertLabel() {
         // Win/Invalid Condition Label
         alertLabel.setForeground(Color.white); 
-        alertLabel.setFont(new Font("Roboto", Font.BOLD, 22));
+        alertLabel.setFont(SMALL_FONT);
         alertLabel.setHorizontalAlignment(SwingConstants.CENTER);
     }
     
