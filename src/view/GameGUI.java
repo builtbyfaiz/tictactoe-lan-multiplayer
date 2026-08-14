@@ -13,7 +13,8 @@ public class GameGUI {
     // --- Variable Declarations ---
     private final int windowWidth  = 800;
     private final int windowHeight = 600;
-    
+    private final int sidebarWidth = (3 * windowWidth) / 10; // 30% of window width
+
     // Fonts
     private final String FONT = Font.SANS_SERIF;
 
@@ -23,7 +24,7 @@ public class GameGUI {
     private final Font LARGE_FONT  = new Font(FONT, Font.BOLD, 48);
     private final Font XLARGE_FONT = new Font(FONT, Font.BOLD, 72);
     
-        // Color Pallete
+    // Color Pallete
     Color appBgMain      = new Color(6, 6, 19);
     Color appBgSidebar   = new Color(24, 18, 36);
 
@@ -53,18 +54,20 @@ public class GameGUI {
     // --- Side Bar Components ---
 
     // Labels
-    private JLabel infoLabel  = new JLabel();
+    private JLabel infoLabel  = new JLabel(); // Combination label of score and turn
     private JLabel alertLabel = new JLabel();
     private JLabel scoreLabel = new JLabel("Score: 0-0");
     private JLabel turnLabel  = new JLabel("Turn: Player-1");
 
     // Buttons
-    private JButton resetbutton   = new JButton("RESET");
-    private JButton clientbutton  = new JButton("Client");
-    private JButton serverbutton  = new JButton("Server");
-    private JPanel networkbuttons = new JPanel(new GridBagLayout());
-    
+    private JButton resetButton   = new JButton("RESET");
+    private JButton clientButton  = new JButton("Client");
+    private JButton serverButton  = new JButton("Server");
+
     private JCheckBox multiplayerToggleButton = new JCheckBox("Multiplayer");
+
+    // Wrappers
+    private JPanel networkButtonsBlock = new JPanel(new GridBagLayout());
 
     // Contructor
     public GameGUI(Game game) {
@@ -74,7 +77,7 @@ public class GameGUI {
         initGameArea();
         initSidebar();
 
-        frame.add(sidebar, BorderLayout.WEST);
+        frame.add(sidebar,  BorderLayout.WEST);
         frame.add(gameArea, BorderLayout.CENTER);
         frame.setVisible(true);
     }
@@ -83,9 +86,9 @@ public class GameGUI {
     public JFrame    getWindow() { return frame; }
     public JButton[][] getGrid() { return grid;  }
 
-    public JButton getResetButton()  { return resetbutton;  }
-    public JButton getServerButton() { return serverbutton; }
-    public JButton getClientButton() { return clientbutton; }
+    public JButton getResetButton()  { return resetButton;  }
+    public JButton getServerButton() { return serverButton; }
+    public JButton getClientButton() { return clientButton; }
     public JToggleButton getToggleMultiplayerButton() { return multiplayerToggleButton; }
 
     public void setTurnLabel (String text) { turnLabel .setText(text); }
@@ -177,10 +180,8 @@ public class GameGUI {
 
         gameArea.add(gameFrame);
     }
-    
+            
     private void initSidebar() {
-
-        int sidebarWidth = (3 * windowWidth) / 10; // 30% of window width
         sidebar.setPreferredSize(new Dimension(sidebarWidth, windowHeight));
         sidebar.setBackground(appBgSidebar);
 
@@ -200,26 +201,26 @@ public class GameGUI {
         sidebar.add(multiplayerToggleButton);
         sidebar.add(infoLabel);
         sidebar.add(alertLabel);
-        sidebar.add(resetbutton);
-        sidebar.add(networkbuttons);
+        sidebar.add(resetButton);
+        sidebar.add(networkButtonsBlock);
     }
 
     private void initNetworkbuttons() {
-        networkbuttons.setBackground(appBgSidebar);
-        networkbuttons.add(serverbutton);
-        networkbuttons.add(clientbutton);
+        networkButtonsBlock.setBackground(appBgSidebar);
+        networkButtonsBlock.add(serverButton);
+        networkButtonsBlock.add(clientButton);
 
-        for (Component button : networkbuttons.getComponents()) {
+        for (Component button : networkButtonsBlock.getComponents()) {
             button.setFont(TINY_FONT);
             button.setBackground(appBgMain);
             button.setForeground(buttonResetText);
             button.setPreferredSize(new Dimension(100,50));
         }
-        serverbutton.setBorder(pinkBorder);
-        serverbutton.setFocusPainted(false);
+        serverButton.setBorder(pinkBorder);
+        serverButton.setFocusPainted(false);
 
-        clientbutton.setBorder(cyanBorder);
-        clientbutton.setFocusPainted(false);
+        clientButton.setBorder(cyanBorder);
+        clientButton.setFocusPainted(false);
     }
     
     private void initMultiplayerToggle() {
@@ -233,22 +234,21 @@ public class GameGUI {
     }
 
     private void initResetbutton() {
-        // Reset Button
-        resetbutton.setFont(MEDIUM_FONT);
-        resetbutton.setBackground(buttonResetBg);
-        resetbutton.setForeground(buttonResetText);
-        // resetbutton.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
-        resetbutton.setFocusPainted(false);
+        resetButton.setFont(MEDIUM_FONT);
+        resetButton.setFocusPainted(false);
+        resetButton.setBackground(buttonResetBg);
+        resetButton.setForeground(buttonResetText);
+        resetButton.setBorder(pinkBorder);
     }
 
+    // Score + Turn Label
     private void initInfoLabel() {
-        // Score + Turn Label
         infoLabel = new JLabel("<html><center>"
                                + scoreLabel.getText() + "<br>"
                                + turnLabel.getText()  +
                                "</center></html>");
 
-        infoLabel.setFont(MEDIUM_FONT);
+        infoLabel.setFont(SMALL_FONT);
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         infoLabel.setForeground(primary);
     }
