@@ -14,7 +14,12 @@ import src.network.GamePeer;
 import src.network.GameServer;
 import src.view.GameGUI;
 
-/// Manager class acting as middleman between GUI, Main, and Network
+/**
+ * Manager class acting as middleman between GUI, Main, and Network.
+ * <p>
+ * Keeps {@link Game} (state/rules) and {@link GameGUI} (rendering) decoupled from
+ * each other and from the network layer, this class acts as an orchestrator
+ */
 public class GameController {
 
     private static final String INVALID_MOVE_MSG = "<html><center>Invalid Input!<br>Box already marked</center></html>";
@@ -27,6 +32,12 @@ public class GameController {
     private boolean isServer;         // Server is always X and moves first
     private boolean myTurn;           // If it is turn of current instance
 
+    /**
+     * Wires the GUI to this controller and sets initial state.
+     * <p>
+     * Network buttons start hidden as multiplayer is off by default.
+     * The window close listener exists to disconnect sockets afterward if present
+     */
     public GameController(Game game, GameGUI view) {
         this.game = game;
         this.view = view;
@@ -73,6 +84,14 @@ public class GameController {
     }
 
     // --- Gameplay ---
+
+    /** 
+     * Handles a grid cell click.
+     * <p>
+     * Prevents processing if not {@code myTurn} or {@code game.win}
+     * After game completion, the client calls {@link #listenForOpponentMove()} as it still
+     * needs to receive the server's reset (0) or disconnect (-1) signal.
+     */
     private void onCellClicked(JButton button) {
         if (multiplayerMode && (!myTurn || game.win))
             return;
@@ -107,6 +126,12 @@ public class GameController {
         }
     }
 
+    /** 
+     * Handles the reset button.
+     * <p>
+     * In singleplayer, it can be called in any move.
+     * In multiplayer, only server resets, and only after game completion.
+     */
     private void onResetClicked() {
         if (!multiplayerMode) {
             resetGame();
@@ -128,6 +153,12 @@ public class GameController {
         updateView();
     }
 
+    /**
+     * Starts hosting a game.
+     * <p>
+     * Connects on a background thread.
+     * The server is hardcoded to move first once connected.
+     */
     private void initServer() {
         if (network != null)
             network.disconnect();
@@ -147,6 +178,12 @@ public class GameController {
         }).start();
     }
 
+    /**
+     * Starts joining a game as a client.
+     * <p>
+     * Prompts for an IP and connects without blocking.
+     * Invokes {@link #listenForOpponentMove()} as server always moves first.
+     */
     private void initClient() {
         if (network != null) network.disconnect();
         network  = new GameClient();
@@ -172,6 +209,12 @@ public class GameController {
     }
 
     // --- Multiplayer Utils ---
+
+    /**
+     * Toggles multiplayer on/off.
+     * <p>
+     * Disconnectes network each time to prevent misconfiguration
+     */
     private void setMultiplayerMode(boolean enabled) {
         multiplayerMode = enabled;
         myTurn = false;
@@ -188,6 +231,11 @@ public class GameController {
         resetGame();
     }
 
+    /**
+     * Spawns a persistent blocking receive thread for the opponent's next move.
+     * <p>
+     * One time use by design, re-invoke the method when needed
+     */
     private void listenForOpponentMove() {
         new Thread(() -> {
             int move = network.receive();
@@ -200,6 +248,12 @@ public class GameController {
         }).start();
     }
 
+    /**
+     * Applies a move received from the opponent.
+     * <p>
+     * 0 is the reset signal
+     * After a LAN win, The client re-listens for server to send reset signal.
+     */
     private void applyRemoteMove(int move) {
         if (move == 0) { // reset signal from server
             resetGame();
@@ -219,6 +273,12 @@ public class GameController {
             myTurn = true;
     }
 
+    /**
+     * Handles opponent disconnect (signalled by {@code -1} from {@link GamePeer#receive()}).
+     * <p>
+     * Routes through {@link #setMultiplayerMode(boolean)}, so
+     * UI can update as multiplayer is no longer active.
+     */
     private void handleDisconnect() {
         view.setAlertLabel("Opponent disconnected");
         view.getToggleMultiplayerButton().setSelected(false);
@@ -233,6 +293,6 @@ public class GameController {
 
     private void showWinMessage() {
         view.setAlertLabel("<html><center>Player " + game.getTurn()
-                + " Won!<br>Please Reset Game</center></html>");
+                + " Won!</center></html>");
     }
 }
