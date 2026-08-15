@@ -20,27 +20,26 @@ public class GameGUI {
 
     private final Font TINY_FONT   = new Font(FONT, Font.BOLD, 16);
     private final Font SMALL_FONT  = new Font(FONT, Font.BOLD, 24);
+    private final Font SMALL_MEDIUM_FONT  = new Font(FONT, Font.BOLD, 28);
     private final Font MEDIUM_FONT = new Font(FONT, Font.BOLD, 32);
-    private final Font LARGE_FONT  = new Font(FONT, Font.BOLD, 48);
-    private final Font XLARGE_FONT = new Font(FONT, Font.BOLD, 72);
+    private final Font LARGE_FONT  = new Font(FONT, Font.BOLD, 72);
     
     // Color Pallete
-    Color appBgMain      = new Color(6, 6, 19);
-    Color appBgSidebar   = new Color(24, 18, 36);
+    Color mainBg      = new Color(6, 6, 19);
+    Color sidebarBg   = new Color(24, 18, 36);
+    Color siderbarCenterBg =  new Color(14, 10, 26);
 
     Color primary        = new Color(0, 229, 255);
+    Color primaryAccent   = new Color(0, 114, 128);
+    
     Color secondary      = new Color(234, 0, 154);
+    Color secondaryAccent = new Color(104, 21, 65);
     
     Color text = new Color(240, 240, 245);
     
-    Color primaryLight   = new Color(0, 114, 128);
-    Color secondaryLight = new Color(104, 21, 65);
-
-    // Color secondaryLight = new Color(117, 0, 77);
-    
     // Borders
-    Border cyanBorder    = BorderFactory.createLineBorder(primaryLight, 2);
-    Border pinkBorder    = BorderFactory.createLineBorder(secondaryLight, 2);
+    Border cyanBorder    = BorderFactory.createLineBorder(primaryAccent, 2);
+    Border pinkBorder    = BorderFactory.createLineBorder(secondaryAccent, 2);
 
     Border defaultBorder = BorderFactory.createLineBorder(Color.DARK_GRAY, 2);
 
@@ -68,9 +67,9 @@ public class GameGUI {
     private JCheckBox multiplayerCheckbox = new JCheckBox("Multiplayer");
 
     // Wrappers
-    private JPanel networkButtonsBlock = new JPanel(new GridBagLayout());
     private JPanel infoLabelBlock      = new JPanel(new GridBagLayout());
     private JPanel alertLabelBlock     = new JPanel(new GridBagLayout());
+    private JPanel networkButtonsBlock = new JPanel(new GridBagLayout());
 
     // Contructor
     public GameGUI(Game game) {
@@ -151,10 +150,10 @@ public class GameGUI {
                 int buttonNumber = (i * 3) + j + 1;
 
                 JButton button = new JButton(String.valueOf(buttonNumber));
-                button.setFont(XLARGE_FONT);
+                button.setFont(LARGE_FONT);
 
                 button.setForeground(Color.DARK_GRAY);
-                button.setBackground(appBgMain);
+                button.setBackground(mainBg);
                 button.setHorizontalAlignment(SwingConstants.CENTER); // Makes button text centered #TEMP
                 button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
                 button.setFocusPainted(false);
@@ -170,8 +169,8 @@ public class GameGUI {
 
         JPanel gameFrame = new JPanel(new GridLayout(3, 3, 8, 8));
         
-        gameArea.setBackground(appBgMain);
-        gameFrame.setBackground(appBgMain);
+        gameArea.setBackground(mainBg);
+        gameFrame.setBackground(mainBg);
 
         gameArea.setPreferredSize(new Dimension(gameAreaWidth, windowHeight));
         gameFrame.setPreferredSize(new Dimension(gameFrameSize, gameFrameSize));
@@ -187,14 +186,14 @@ public class GameGUI {
             
     private void initSidebar() {
         sidebar.setPreferredSize(new Dimension(sidebarWidth, windowHeight));
-        sidebar.setBackground(appBgSidebar);
+        sidebar.setBackground(sidebarBg);
 
         // Logo
-        JLabel logo = new JLabel("TicTacToe");
-        // logo.setFont(LARGE_FONT);
-        logo.setFont(new Font(Font.SERIF, Font.BOLD, 48));
-        logo.setForeground(secondaryLight);
-        logo.setHorizontalAlignment(SwingConstants.CENTER);
+        JLabel logo = new JLabel("");
+        // logo.setFont(new Font(Font.SERIF, Font.BOLD, 40));
+    
+        // logo.setForeground(secondary);
+        // logo.setHorizontalAlignment(SwingConstants.CENTER);
 
         initInfoLabel(); 
         initAlertLabel();
@@ -203,21 +202,21 @@ public class GameGUI {
         initMultiplayerToggle();
         
         sidebar.add(logo);
-        sidebar.add(multiplayerCheckbox);
+        sidebar.add(resetButton);
         sidebar.add(infoLabelBlock);
         sidebar.add(alertLabelBlock);
-        sidebar.add(resetButton);
+        sidebar.add(multiplayerCheckbox);
         sidebar.add(networkButtonsBlock);
     }
     
     private void initNetworkbuttons() {
-        networkButtonsBlock.setBackground(appBgSidebar);
+        networkButtonsBlock.setBackground(sidebarBg);
         networkButtonsBlock.add(serverButton);
         networkButtonsBlock.add(clientButton);
 
         for (Component button : networkButtonsBlock.getComponents()) {
             button.setFont(TINY_FONT);
-            button.setBackground(appBgMain);
+            button.setBackground(mainBg);
             button.setForeground(text);
             button.setPreferredSize(new Dimension(100,50));
         }
@@ -229,10 +228,10 @@ public class GameGUI {
     }
     
     private void initMultiplayerToggle() {
-        multiplayerCheckbox.setText("Multiplayer");
-        multiplayerCheckbox.setFont(SMALL_FONT);
-        multiplayerCheckbox.setBackground(appBgSidebar);
-        multiplayerCheckbox.setForeground(secondaryLight);
+        multiplayerCheckbox.setText(" L.A.N ");
+        multiplayerCheckbox.setFont(MEDIUM_FONT);
+        multiplayerCheckbox.setBackground(secondaryAccent);
+        multiplayerCheckbox.setForeground(text);
         multiplayerCheckbox.setHorizontalAlignment(SwingConstants.CENTER);
         multiplayerCheckbox.setFocusPainted(false);
         multiplayerCheckbox.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -240,49 +239,53 @@ public class GameGUI {
         // Toggle text color when checked/unchecked
         multiplayerCheckbox.addItemListener(e -> {
             if (multiplayerCheckbox.isSelected()) {
-                multiplayerCheckbox.setForeground(primary);
+                multiplayerCheckbox.setBackground(secondary);
             } else {
-                multiplayerCheckbox.setForeground(secondaryLight);
+                multiplayerCheckbox.setBackground(secondaryAccent);
             }
-        });
+        });        
     }
 
     private void initResetbutton() {
         resetButton.setFont(MEDIUM_FONT);
         resetButton.setFocusPainted(false);
-        resetButton.setBackground(secondaryLight);
+        resetButton.setBackground(secondaryAccent);
         resetButton.setForeground(text);
         resetButton.setBorder(pinkBorder);
     }
 
     // Score + Turn Label
     private void initInfoLabel() {
-        infoLabel = new JLabel("<html><center>"
-        + scoreLabel.getText() + "<br>"
-        + turnLabel.getText()  +
-        "</center></html>");
         
+        infoLabel = new JLabel("<html><center>" + scoreLabel.getText() +
+                                         "<br>" +  turnLabel.getText() + "</center></html>");
+        
+                                         
         infoLabel.setFont(SMALL_FONT);
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         infoLabel.setForeground(primary);
 
-        // infoLabelBlock.setBackground(Color.GRAY);
+        Border border = BorderFactory.createMatteBorder(2, 2, 0, 2, primaryAccent);
+        infoLabelBlock.setBorder(border);
+
         infoLabelBlock.add(infoLabel);
     }
 
+    // Win/Invalid Condition Label
     private void initAlertLabel() {
-        // Win/Invalid Condition Label
-        alertLabel.setForeground(Color.white); 
+
         alertLabel.setFont(SMALL_FONT);
         alertLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        alertLabel.setForeground(Color.white); 
 
-        // Parameters: (top, left, bottom, right, color)
-        Border topBorder    = BorderFactory.createMatteBorder(2, 2, 0, 2, primaryLight);
-        Border borderBorder = BorderFactory.createMatteBorder(0, 2, 2, 2, primaryLight);
-        alertLabelBlock.setBorder(borderBorder);
-        infoLabelBlock.setBorder(topBorder);
+        Border border = BorderFactory.createMatteBorder(0, 2, 2, 2, primaryAccent);
+        alertLabelBlock.setBorder(border);
+        
         alertLabelBlock.setBackground(new Color(14, 10, 26));
         infoLabelBlock.setBackground(new Color(14, 10, 26));
+
+        // alertLabelBlock.setBackground(appBgSidebar);
+        // infoLabelBlock.setBackground(appBgSidebar);
         
         alertLabelBlock.add(alertLabel);
     }
@@ -304,7 +307,7 @@ public class GameGUI {
                 break;
 
             case CLIENT_INIT:
-                setAlertLabel("<html><center>Client Initialized.<br>Enter IP in terminal.</center></html>");
+                setAlertLabel("<html><center>Client Initialized.<br>Enter Server IP.</center></html>");
                 break;
 
             case CONNECTED:
