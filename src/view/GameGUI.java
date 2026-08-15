@@ -258,7 +258,7 @@ public class GameGUI {
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         infoLabel.setForeground(primary);
         
-        Border border = BorderFactory.createMatteBorder(2, 2, 0, 2, primaryAccent);
+        Border border = BorderFactory.createMatteBorder(6, 6, 0, 6, secondaryAccent);
         infoLabelBlock.setBorder(border);
         infoLabelBlock.setBackground(sidebarCenterBg);
         infoLabelBlock.add(infoLabel);
@@ -271,7 +271,7 @@ public class GameGUI {
         alertLabel.setHorizontalAlignment(SwingConstants.CENTER);
         alertLabel.setForeground(primary); 
 
-        Border border = BorderFactory.createMatteBorder(0, 2, 2, 2, primaryAccent);
+        Border border = BorderFactory.createMatteBorder(0, 6, 6, 6, secondaryAccent);
         alertLabelBlock.setBorder(border);
         alertLabelBlock.setBackground(sidebarCenterBg);
 
