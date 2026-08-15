@@ -20,14 +20,13 @@ public class GameGUI {
 
     private final Font TINY_FONT   = new Font(FONT, Font.BOLD, 16);
     private final Font SMALL_FONT  = new Font(FONT, Font.BOLD, 24);
-    private final Font SMALL_MEDIUM_FONT  = new Font(FONT, Font.BOLD, 28);
     private final Font MEDIUM_FONT = new Font(FONT, Font.BOLD, 32);
     private final Font LARGE_FONT  = new Font(FONT, Font.BOLD, 72);
     
     // Color Pallete
     Color mainBg      = new Color(6, 6, 19);
     Color sidebarBg   = new Color(24, 18, 36);
-    Color siderbarCenterBg =  new Color(14, 10, 26);
+    Color sidebarCenterBg =  new Color(14, 10, 26);
 
     Color primary        = new Color(0, 229, 255);
     Color primaryAccent   = new Color(0, 114, 128);
@@ -36,7 +35,7 @@ public class GameGUI {
     Color secondaryAccent = new Color(104, 21, 65);
     
     Color text = new Color(240, 240, 245);
-    
+
     // Borders
     Border cyanBorder    = BorderFactory.createLineBorder(primaryAccent, 2);
     Border pinkBorder    = BorderFactory.createLineBorder(secondaryAccent, 2);
@@ -67,7 +66,7 @@ public class GameGUI {
     private JCheckBox multiplayerCheckbox = new JCheckBox("Multiplayer");
 
     // Wrappers
-    private JPanel infoLabelBlock      = new JPanel(new GridBagLayout());
+    private JPanel infoLabelBlock      = new JPanel(new GridBagLayout()); // GridBag auto centers children
     private JPanel alertLabelBlock     = new JPanel(new GridBagLayout());
     private JPanel networkButtonsBlock = new JPanel(new GridBagLayout());
 
@@ -188,20 +187,15 @@ public class GameGUI {
         sidebar.setPreferredSize(new Dimension(sidebarWidth, windowHeight));
         sidebar.setBackground(sidebarBg);
 
-        // Logo
-        JLabel logo = new JLabel("");
-        // logo.setFont(new Font(Font.SERIF, Font.BOLD, 40));
-    
-        // logo.setForeground(secondary);
-        // logo.setHorizontalAlignment(SwingConstants.CENTER);
-
         initInfoLabel(); 
         initAlertLabel();
         initResetbutton();
         initNetworkbuttons();
         initMultiplayerToggle();
         
-        sidebar.add(logo);
+        JLabel headerSpace = new JLabel();
+
+        sidebar.add(headerSpace);
         sidebar.add(resetButton);
         sidebar.add(infoLabelBlock);
         sidebar.add(alertLabelBlock);
@@ -258,16 +252,15 @@ public class GameGUI {
     private void initInfoLabel() {
         
         infoLabel = new JLabel("<html><center>" + scoreLabel.getText() +
-                                         "<br>" +  turnLabel.getText() + "</center></html>");
-        
+                                         "<br>" +  turnLabel.getText() + "</center></html>");        
                                          
         infoLabel.setFont(SMALL_FONT);
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         infoLabel.setForeground(primary);
-
+        
         Border border = BorderFactory.createMatteBorder(2, 2, 0, 2, primaryAccent);
         infoLabelBlock.setBorder(border);
-
+        infoLabelBlock.setBackground(sidebarCenterBg);
         infoLabelBlock.add(infoLabel);
     }
 
@@ -276,17 +269,12 @@ public class GameGUI {
 
         alertLabel.setFont(SMALL_FONT);
         alertLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        alertLabel.setForeground(Color.white); 
+        alertLabel.setForeground(primary); 
 
         Border border = BorderFactory.createMatteBorder(0, 2, 2, 2, primaryAccent);
         alertLabelBlock.setBorder(border);
-        
-        alertLabelBlock.setBackground(new Color(14, 10, 26));
-        infoLabelBlock.setBackground(new Color(14, 10, 26));
+        alertLabelBlock.setBackground(sidebarCenterBg);
 
-        // alertLabelBlock.setBackground(appBgSidebar);
-        // infoLabelBlock.setBackground(appBgSidebar);
-        
         alertLabelBlock.add(alertLabel);
     }
     
