@@ -7,7 +7,6 @@ import javax.swing.border.Border;
 import src.model.Game;
 import src.model.NetworkState;
 import src.model.themes.Theme;
-import src.model.themes.DarkTheme;
 
 
 /// Renders game state in GUI window
@@ -48,8 +47,6 @@ public class GameGUI {
 
     // Contructor
     public GameGUI(Game game) {
-        DarkTheme.apply();
-
         this.game = game;
         initWindow();
         initGrid();
@@ -129,10 +126,10 @@ public class GameGUI {
                 JButton button = new JButton(String.valueOf(buttonNumber));
                 button.setFont(Theme.Fonts.LARGE);
 
-                button.setForeground(Color.DARK_GRAY);
+                button.setForeground(Theme.Colors.INACTIVE_ELEMENT);
                 button.setBackground(Theme.Colors.MAIN_BG);
-                button.setHorizontalAlignment(SwingConstants.CENTER); // Makes button text centered #TEMP
-                button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
+                button.setHorizontalAlignment(SwingConstants.CENTER);
+                button.setBorder(Theme.Borders.DEFAULT);
                 button.setFocusPainted(false);
                 
                 grid[i][j] = button;
@@ -171,11 +168,13 @@ public class GameGUI {
         initNetworkbuttons();
         initMultiplayerToggle();
 
-        String cyanHex = "#00E5FF"; 
+        JLabel emptySpace = new JLabel("<html>TicTac<span style='color: rgb(" 
+                                        + Theme.Colors.PRIMARY.getRed()   + ","
+                                        + Theme.Colors.PRIMARY.getGreen() + ","
+                                        + Theme.Colors.PRIMARY.getBlue()  + ");'>X</span></html>");
 
-        JLabel emptySpace = new JLabel("<html>TicTac<span style='color: " + cyanHex + ";'>X</span></html>");
         emptySpace.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 42)); // Sans-serif drops the outdated serif hooks
-        emptySpace.setForeground(Color.WHITE);
+        emptySpace.setForeground(Theme.Colors.LOGO);
         emptySpace.setHorizontalAlignment(SwingConstants.CENTER);
 
         sidebar.add(emptySpace);
@@ -267,7 +266,7 @@ public class GameGUI {
         for (var row : grid) {
             for (var button : row) {
                 button.setBorder(Theme.Borders.DEFAULT);
-                button.setForeground(Color.DARK_GRAY);
+                button.setForeground(Theme.Colors.INACTIVE_ELEMENT);
             }
         }
     }

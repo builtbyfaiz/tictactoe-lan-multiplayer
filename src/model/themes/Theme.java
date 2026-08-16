@@ -12,7 +12,8 @@ public class Theme {
         public static Color TEXT, MAIN_BG,
                             SIDEBAR, INFO_BLOCK,
                             PRIMARY, SECONDARY,
-                            PRIMARY_ACCENT, SECONDARY_ACCENT;
+                            PRIMARY_ACCENT, SECONDARY_ACCENT,
+                            INACTIVE_ELEMENT, LOGO;
     }
                         
     // Fonts
