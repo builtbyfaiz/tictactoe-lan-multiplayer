@@ -93,13 +93,13 @@ public class GameGUI {
                 grid[i][j].setText(String.valueOf(characterGrid[i][j]));
                 
                 if (characterGrid[i][j] == 'X') {
-                    grid[i][j].setForeground(Theme.PRIMARY_COLOR);
-                    grid[i][j].setBorder(Theme.CYAN_BORDER);
+                    grid[i][j].setForeground(Theme.Colors.PRIMARY);
+                    grid[i][j].setBorder(Theme.Borders.CYAN);
                 }
 
                 if (characterGrid[i][j] == 'O') {
-                    grid[i][j].setForeground(Theme.SECONDARY_COLOR);
-                    grid[i][j].setBorder(Theme.PINK_BORDER);
+                    grid[i][j].setForeground(Theme.Colors.SECONDARY);
+                    grid[i][j].setBorder(Theme.Borders.PINK);
                 }
             }
         }
@@ -123,10 +123,10 @@ public class GameGUI {
                 int buttonNumber = (i * 3) + j + 1;
 
                 JButton button = new JButton(String.valueOf(buttonNumber));
-                button.setFont(Theme.LARGE_FONT);
+                button.setFont(Theme.Fonts.LARGE);
 
                 button.setForeground(Color.DARK_GRAY);
-                button.setBackground(Theme.MAIN_BG_COLOR);
+                button.setBackground(Theme.Colors.MAIN_BG);
                 button.setHorizontalAlignment(SwingConstants.CENTER); // Makes button text centered #TEMP
                 button.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 2));
                 button.setFocusPainted(false);
@@ -142,8 +142,8 @@ public class GameGUI {
 
         JPanel gameFrame = new JPanel(new GridLayout(3, 3, 8, 8));
         
-        gameArea .setBackground(Theme.MAIN_BG_COLOR);
-        gameFrame.setBackground(Theme.MAIN_BG_COLOR);
+        gameArea .setBackground(Theme.Colors.MAIN_BG);
+        gameFrame.setBackground(Theme.Colors.MAIN_BG);
 
         gameArea .setPreferredSize(new Dimension(gameAreaWidth, windowHeight));
         gameFrame.setPreferredSize(new Dimension(gameFrameSize, gameFrameSize));
@@ -159,7 +159,7 @@ public class GameGUI {
             
     private void initSidebar() {
         sidebar.setPreferredSize(new Dimension(sidebarWidth, windowHeight));
-        sidebar.setBackground(Theme.SIDEBAR_COLOR);
+        sidebar.setBackground(Theme.Colors.SIDEBAR);
 
         initInfoLabel(); 
         initAlertLabel();
@@ -183,28 +183,28 @@ public class GameGUI {
     }
     
     private void initNetworkbuttons() {
-        networkButtonsBlock.setBackground(Theme.SIDEBAR_COLOR);
+        networkButtonsBlock.setBackground(Theme.Colors.SIDEBAR);
         networkButtonsBlock.add(serverButton);
         networkButtonsBlock.add(clientButton);
 
         for (Component button : networkButtonsBlock.getComponents()) {
-            button.setFont(Theme.TINY_FONT);
-            button.setBackground(Theme.MAIN_BG_COLOR);
-            button.setForeground(Theme.TEXT_COLOR);
+            button.setFont(Theme.Fonts.TINY);
+            button.setBackground(Theme.Colors.MAIN_BG);
+            button.setForeground(Theme.Colors.TEXT);
             button.setPreferredSize(new Dimension(100,50));
         }
-        serverButton.setBorder(Theme.PINK_BORDER);
+        serverButton.setBorder(Theme.Borders.PINK);
         serverButton.setFocusPainted(false);
 
-        clientButton.setBorder(Theme.CYAN_BORDER);
+        clientButton.setBorder(Theme.Borders.CYAN);
         clientButton.setFocusPainted(false);
     }
     
     private void initMultiplayerToggle() {
         multiplayerCheckbox.setText(" L.A.N ");
-        multiplayerCheckbox.setFont(Theme.MEDIUM_FONT);
-        multiplayerCheckbox.setBackground(Theme.SECONDARY_ACCENT_COLOR);
-        multiplayerCheckbox.setForeground(Theme.TEXT_COLOR);
+        multiplayerCheckbox.setFont(Theme.Fonts.MEDIUM);
+        multiplayerCheckbox.setBackground(Theme.Colors.SECONDARY_ACCENT);
+        multiplayerCheckbox.setForeground(Theme.Colors.TEXT);
         multiplayerCheckbox.setHorizontalAlignment(SwingConstants.CENTER);
         multiplayerCheckbox.setFocusPainted(false);
         multiplayerCheckbox.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -212,20 +212,20 @@ public class GameGUI {
         // Toggle text color when checked/unchecked
         multiplayerCheckbox.addItemListener(e -> {
             if (multiplayerCheckbox.isSelected()) {
-                multiplayerCheckbox.setForeground(Theme.PRIMARY_COLOR);
+                multiplayerCheckbox.setForeground(Theme.Colors.PRIMARY);
             } else {
-                multiplayerCheckbox.setForeground(Theme.TEXT_COLOR);
-                multiplayerCheckbox.setBackground(Theme.SECONDARY_ACCENT_COLOR);
+                multiplayerCheckbox.setForeground(Theme.Colors.TEXT);
+                multiplayerCheckbox.setBackground(Theme.Colors.SECONDARY_ACCENT);
             }
         });        
     }
 
     private void initResetbutton() {
-        resetButton.setFont(Theme.MEDIUM_FONT);
+        resetButton.setFont(Theme.Fonts.MEDIUM);
         resetButton.setFocusPainted(false);
-        resetButton.setBackground(Theme.SECONDARY_ACCENT_COLOR);
-        resetButton.setForeground(Theme.TEXT_COLOR);
-        resetButton.setBorder(Theme.PINK_BORDER);
+        resetButton.setBackground(Theme.Colors.SECONDARY_ACCENT);
+        resetButton.setForeground(Theme.Colors.TEXT);
+        resetButton.setBorder(Theme.Borders.PINK);
     }
 
     // Score + Turn Label
@@ -234,26 +234,26 @@ public class GameGUI {
         infoLabel = new JLabel("<html><center>" + scoreLabel.getText() +
                                          "<br>" +  turnLabel.getText() + "</center></html>");        
                                          
-        infoLabel.setFont(Theme.SMALL_FONT);
+        infoLabel.setFont(Theme.Fonts.SMALL);
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        infoLabel.setForeground(Theme.PRIMARY_COLOR);
+        infoLabel.setForeground(Theme.Colors.PRIMARY);
         
-        Border border = BorderFactory.createMatteBorder(6, 6, 0, 6, Theme.SIDEBAR_COLOR);
+        Border border = BorderFactory.createMatteBorder(6, 6, 0, 6, Theme.Colors.SIDEBAR);
         infoLabelBlock.setBorder(border);
-        infoLabelBlock.setBackground(Theme.INFO_BLOCK_COLOR);
+        infoLabelBlock.setBackground(Theme.Colors.INFO_BLOCK);
         infoLabelBlock.add(infoLabel);
     }
 
     // Win/Invalid Condition Label
     private void initAlertLabel() {
 
-        alertLabel.setFont(Theme.SMALL_FONT);
+        alertLabel.setFont(Theme.Fonts.SMALL);
         alertLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        alertLabel.setForeground(Theme.PRIMARY_COLOR); 
+        alertLabel.setForeground(Theme.Colors.PRIMARY); 
 
-        Border border = BorderFactory.createMatteBorder(0, 6, 6, 6, Theme.SIDEBAR_COLOR);
+        Border border = BorderFactory.createMatteBorder(0, 6, 6, 6, Theme.Colors.SIDEBAR);
         alertLabelBlock.setBorder(border);
-        alertLabelBlock.setBackground(Theme.INFO_BLOCK_COLOR);
+        alertLabelBlock.setBackground(Theme.Colors.INFO_BLOCK);
 
         alertLabelBlock.add(alertLabel);
     }
@@ -262,7 +262,7 @@ public class GameGUI {
     public void resetGridColors() {
         for (var row : grid) {
             for (var button : row) {
-                button.setBorder(Theme.DEFAULT_BORDER);
+                button.setBorder(Theme.Borders.DEFAULT);
                 button.setForeground(Color.DARK_GRAY);
             }
         }
