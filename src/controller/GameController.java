@@ -31,7 +31,7 @@ public class GameController {
     private boolean multiplayerMode;  // State of multiplayer
     private boolean isServer;         // Server is always X and moves first
     private boolean myTurn;           // If it is turn of current instance
-
+    
     /**
      * Wires the GUI to this controller and sets initial state.
      * <p>

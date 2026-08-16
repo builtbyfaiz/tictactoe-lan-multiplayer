@@ -6,7 +6,9 @@ import javax.swing.border.Border;
 
 import src.model.Game;
 import src.model.NetworkState;
-import src.model.Theme;
+import src.model.themes.Theme;
+import src.model.themes.DarkTheme;
+
 
 /// Renders game state in GUI window
 public class GameGUI {
@@ -46,6 +48,8 @@ public class GameGUI {
 
     // Contructor
     public GameGUI(Game game) {
+        DarkTheme.apply();
+
         this.game = game;
         initWindow();
         initGrid();
