@@ -93,14 +93,15 @@ public class GameGUI {
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                grid[i][j].setText(String.valueOf(characterGrid[i][j]));
-                
+
                 if (characterGrid[i][j] == 'X') {
+                    grid[i][j].setText(Theme.Symbols.X);
                     grid[i][j].setForeground(Theme.Colors.PRIMARY);
                     grid[i][j].setBorder(Theme.Borders.PRIMARY);
                 }
-
+                
                 if (characterGrid[i][j] == 'O') {
+                    grid[i][j].setText(Theme.Symbols.O);
                     grid[i][j].setForeground(Theme.Colors.SECONDARY);
                     grid[i][j].setBorder(Theme.Borders.SECONDARY);
                 }

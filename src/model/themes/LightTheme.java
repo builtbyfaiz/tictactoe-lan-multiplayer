@@ -8,6 +8,10 @@ public class LightTheme {
 
     public static void apply() {
 
+        // Symbols
+        Theme.Symbols.X = "X";
+        Theme.Symbols.O = "O";
+
         // Colors
         Theme.Colors.TEXT             = new Color(58, 42, 28);      
         Theme.Colors.MAIN_BG          = new Color(250, 238, 215);   
@@ -27,11 +31,15 @@ public class LightTheme {
         Theme.Fonts.LARGE  = new Font(Font.SANS_SERIF, Font.BOLD, 72);
 
         // Borders
-        Theme.Borders.PRIMARY    = BorderFactory.createLineBorder(Theme.Colors.PRIMARY, 4);   // green border for X
-        Theme.Borders.SECONDARY    = BorderFactory.createLineBorder(Theme.Colors.SECONDARY, 4); // orange border for O
-        Theme.Borders.DEFAULT = BorderFactory.createLineBorder(new Color(200, 178, 140), 4);
+        Theme.Borders.PRIMARY   = BorderFactory.createLineBorder(Theme.Colors.PRIMARY,     4);
+        Theme.Borders.SECONDARY = BorderFactory.createLineBorder(Theme.Colors.SECONDARY,   4);
+        Theme.Borders.DEFAULT   = BorderFactory.createLineBorder(new Color(200, 178, 140), 4);
 
         Theme.Borders.INFO_BLOCK_TOP    = BorderFactory.createMatteBorder(12, 12, 0, 12, Theme.Colors.SIDEBAR);
         Theme.Borders.INFO_BLOCK_BOTTOM = BorderFactory.createMatteBorder(0, 12, 12, 12, Theme.Colors.SIDEBAR);
+
+        // Symbols
+        Theme.Symbols.X = "X";
+        Theme.Symbols.O = "O";
     }
 }

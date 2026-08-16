@@ -7,6 +7,12 @@ import javax.swing.border.Border;
 
 public class Theme {
     
+    // Symbols
+    public static class Symbols {
+        public static String X;
+        public static String O;
+    }
+    
     // Colors
     public static class Colors {
         public static Color TEXT, MAIN_BG,

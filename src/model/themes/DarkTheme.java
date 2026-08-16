@@ -7,10 +7,13 @@ import javax.swing.BorderFactory;
 public class DarkTheme {
 
     public static void apply() {
+
+        // Symbols
+        Theme.Symbols.X = "X";
+        Theme.Symbols.O = "O";
         
         // Colors
         Theme.Colors.TEXT             = new Color(240, 240, 245);
-        Theme.Colors.LOGO             = Color.WHITE;
         Theme.Colors.MAIN_BG          = new Color(6, 6, 19);
         Theme.Colors.SIDEBAR          = new Color(24, 18, 36);
         Theme.Colors.INFO_BLOCK       = new Color(14, 10, 26);
@@ -18,6 +21,7 @@ public class DarkTheme {
         Theme.Colors.SECONDARY        = new Color(234, 0, 154);
         Theme.Colors.PRIMARY_ACCENT   = new Color(0, 114, 128);
         Theme.Colors.SECONDARY_ACCENT = new Color(104, 21, 65);
+        Theme.Colors.LOGO             = Color.WHITE;
         Theme.Colors.INACTIVE_ELEMENT = Color.DARK_GRAY;
 
         // Fonts
@@ -31,7 +35,7 @@ public class DarkTheme {
         Theme.Borders.SECONDARY = BorderFactory.createLineBorder(Theme.Colors.SECONDARY_ACCENT, 2);
         Theme.Borders.DEFAULT   = BorderFactory.createLineBorder(Theme.Colors.INACTIVE_ELEMENT, 2);
 
-        Theme.Borders.INFO_BLOCK_TOP    = BorderFactory.createMatteBorder(6, 6, 0, 6, Theme.Colors.SIDEBAR);
-        Theme.Borders.INFO_BLOCK_BOTTOM = BorderFactory.createMatteBorder(0, 6, 6, 6, Theme.Colors.SIDEBAR);
+        Theme.Borders.INFO_BLOCK_TOP    = BorderFactory.createMatteBorder(8, 8, 0, 8, Theme.Colors.SIDEBAR);
+        Theme.Borders.INFO_BLOCK_BOTTOM = BorderFactory.createMatteBorder(0, 8, 8, 8, Theme.Colors.SIDEBAR);
     }
 }
