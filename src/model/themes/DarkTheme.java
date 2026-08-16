@@ -27,8 +27,11 @@ public class DarkTheme {
         Theme.Fonts.LARGE  = new Font(Font.SANS_SERIF, Font.BOLD, 72);
 
         // Borders
-        Theme.Borders.CYAN    = BorderFactory.createLineBorder(Theme.Colors.PRIMARY_ACCENT  , 2);
-        Theme.Borders.PINK    = BorderFactory.createLineBorder(Theme.Colors.SECONDARY_ACCENT, 2);
-        Theme.Borders.DEFAULT = BorderFactory.createLineBorder(Theme.Colors.INACTIVE_ELEMENT, 2);
+        Theme.Borders.PRIMARY   = BorderFactory.createLineBorder(Theme.Colors.PRIMARY_ACCENT  , 2);
+        Theme.Borders.SECONDARY = BorderFactory.createLineBorder(Theme.Colors.SECONDARY_ACCENT, 2);
+        Theme.Borders.DEFAULT   = BorderFactory.createLineBorder(Theme.Colors.INACTIVE_ELEMENT, 2);
+
+        Theme.Borders.INFO_BLOCK_TOP    = BorderFactory.createMatteBorder(6, 6, 0, 6, Theme.Colors.SIDEBAR);
+        Theme.Borders.INFO_BLOCK_BOTTOM = BorderFactory.createMatteBorder(0, 6, 6, 6, Theme.Colors.SIDEBAR);
     }
 }

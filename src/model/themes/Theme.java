@@ -23,6 +23,6 @@ public class Theme {
 
     // Borders
     public static class Borders {
-        public static Border CYAN, PINK, DEFAULT;
+        public static Border PRIMARY, SECONDARY, DEFAULT, INFO_BLOCK_TOP, INFO_BLOCK_BOTTOM;
     }
 }

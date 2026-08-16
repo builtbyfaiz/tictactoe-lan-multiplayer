@@ -45,6 +45,8 @@ public class GameGUI {
     private JPanel alertLabelBlock     = new JPanel(new GridBagLayout());
     private JPanel networkButtonsBlock = new JPanel(new GridBagLayout());
 
+    private JPanel multiplayerCheckboxBlock = new JPanel(new GridLayout(1,1,0,0));
+
     // Contructor
     public GameGUI(Game game) {
         this.game = game;
@@ -95,12 +97,12 @@ public class GameGUI {
                 
                 if (characterGrid[i][j] == 'X') {
                     grid[i][j].setForeground(Theme.Colors.PRIMARY);
-                    grid[i][j].setBorder(Theme.Borders.CYAN);
+                    grid[i][j].setBorder(Theme.Borders.PRIMARY);
                 }
 
                 if (characterGrid[i][j] == 'O') {
                     grid[i][j].setForeground(Theme.Colors.SECONDARY);
-                    grid[i][j].setBorder(Theme.Borders.PINK);
+                    grid[i][j].setBorder(Theme.Borders.SECONDARY);
                 }
             }
         }
@@ -181,7 +183,7 @@ public class GameGUI {
         sidebar.add(resetButton);
         sidebar.add(infoLabelBlock);
         sidebar.add(alertLabelBlock);
-        sidebar.add(multiplayerCheckbox);
+        sidebar.add(multiplayerCheckboxBlock);
         sidebar.add(networkButtonsBlock);
     }
     
@@ -196,10 +198,10 @@ public class GameGUI {
             button.setForeground(Theme.Colors.TEXT);
             button.setPreferredSize(new Dimension(100,50));
         }
-        serverButton.setBorder(Theme.Borders.PINK);
+        serverButton.setBorder(Theme.Borders.SECONDARY);
         serverButton.setFocusPainted(false);
 
-        clientButton.setBorder(Theme.Borders.CYAN);
+        clientButton.setBorder(Theme.Borders.PRIMARY);
         clientButton.setFocusPainted(false);
     }
     
@@ -212,6 +214,8 @@ public class GameGUI {
         multiplayerCheckbox.setFocusPainted(false);
         multiplayerCheckbox.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        multiplayerCheckboxBlock.setBorder(Theme.Borders.SECONDARY);
+
         // Toggle text color when checked/unchecked
         multiplayerCheckbox.addItemListener(e -> {
             if (multiplayerCheckbox.isSelected()) {
@@ -221,6 +225,8 @@ public class GameGUI {
                 multiplayerCheckbox.setBackground(Theme.Colors.SECONDARY_ACCENT);
             }
         });        
+
+        multiplayerCheckboxBlock.add(multiplayerCheckbox);
     }
 
     private void initResetbutton() {
@@ -228,7 +234,7 @@ public class GameGUI {
         resetButton.setFocusPainted(false);
         resetButton.setBackground(Theme.Colors.SECONDARY_ACCENT);
         resetButton.setForeground(Theme.Colors.TEXT);
-        resetButton.setBorder(Theme.Borders.PINK);
+        resetButton.setBorder(Theme.Borders.SECONDARY);
     }
 
     // Score + Turn Label
@@ -241,8 +247,7 @@ public class GameGUI {
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         infoLabel.setForeground(Theme.Colors.PRIMARY);
         
-        Border border = BorderFactory.createMatteBorder(6, 6, 0, 6, Theme.Colors.SIDEBAR);
-        infoLabelBlock.setBorder(border);
+        infoLabelBlock.setBorder(Theme.Borders.INFO_BLOCK_TOP);
         infoLabelBlock.setBackground(Theme.Colors.INFO_BLOCK);
         infoLabelBlock.add(infoLabel);
     }
@@ -254,8 +259,7 @@ public class GameGUI {
         alertLabel.setHorizontalAlignment(SwingConstants.CENTER);
         alertLabel.setForeground(Theme.Colors.PRIMARY); 
 
-        Border border = BorderFactory.createMatteBorder(0, 6, 6, 6, Theme.Colors.SIDEBAR);
-        alertLabelBlock.setBorder(border);
+        alertLabelBlock.setBorder(Theme.Borders.INFO_BLOCK_BOTTOM);
         alertLabelBlock.setBackground(Theme.Colors.INFO_BLOCK);
 
         alertLabelBlock.add(alertLabel);
