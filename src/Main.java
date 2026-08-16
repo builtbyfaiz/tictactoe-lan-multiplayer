@@ -28,7 +28,7 @@ class Main {
     // Setsup GUI helpers, applies base theme
     private static void initLookAndFeel() {
 
-        DarkTheme.apply();
+        LightTheme.apply();
         
         // Flat laf provides a modern look to java swing.
         FlatDarkLaf.setup();

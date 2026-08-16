@@ -99,11 +99,13 @@ public class GameGUI {
                     grid[i][j].setForeground(Theme.Colors.PRIMARY);
                     grid[i][j].setBorder(Theme.Borders.PRIMARY);
                 }
-                
-                if (characterGrid[i][j] == 'O') {
+                else if (characterGrid[i][j] == 'O') {
                     grid[i][j].setText(Theme.Symbols.O);
                     grid[i][j].setForeground(Theme.Colors.SECONDARY);
                     grid[i][j].setBorder(Theme.Borders.SECONDARY);
+                }
+                else {
+                    grid[i][j].setText(String.valueOf(characterGrid[i][j])); 
                 }
             }
         }

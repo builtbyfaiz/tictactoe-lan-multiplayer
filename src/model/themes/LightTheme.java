@@ -37,9 +37,5 @@ public class LightTheme {
 
         Theme.Borders.INFO_BLOCK_TOP    = BorderFactory.createMatteBorder(12, 12, 0, 12, Theme.Colors.SIDEBAR);
         Theme.Borders.INFO_BLOCK_BOTTOM = BorderFactory.createMatteBorder(0, 12, 12, 12, Theme.Colors.SIDEBAR);
-
-        // Symbols
-        Theme.Symbols.X = "X";
-        Theme.Symbols.O = "O";
     }
 }
