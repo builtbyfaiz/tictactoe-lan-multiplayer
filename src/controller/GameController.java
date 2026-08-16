@@ -22,7 +22,7 @@ import src.view.GameGUI;
  */
 public class GameController {
 
-    private static final String INVALID_MOVE_MSG = "<html><center>Invalid Input!<br>Box already marked</center></html>";
+    private static final String INVALID_MOVE_MSG = "<html><center>Already Marked!</center></html>";
 
     private final Game game;     // Console implementation
     private final GameGUI view;  // GUI render of the game state
