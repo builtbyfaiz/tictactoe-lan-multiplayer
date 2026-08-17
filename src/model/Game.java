@@ -30,6 +30,16 @@ public class Game {
         return grid_;
     }
 
+public boolean isDraw() {
+    for (char[] row : grid_) {
+        for (char cell : row) {
+            if (cell != player1Marker && cell != player2Marker) {
+                return false;
+            }
+        }
+    }
+    return !win;
+}
     public int getTurn() {
         return turn;
     }
