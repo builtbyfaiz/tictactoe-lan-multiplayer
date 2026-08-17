@@ -13,19 +13,18 @@ public class ForestTheme {
         Theme.Symbols.O = "🍁";
         
         // Colors
-        Theme.Colors.TEXT             = new Color(216, 226, 220); // Soft Mist / Muted Sage (#D8E2DC)
-        Theme.Colors.MAIN_BG          = new Color(15, 26, 20);    // Deep Shadow Green (#0F1A14)
-        Theme.Colors.SIDEBAR          = new Color(27, 59, 43);    // Deep Pine Green (#1B3B2B)
-        Theme.Colors.INFO_BLOCK       = new Color(18, 33, 25);    // Dark Undergrowth Container (#122119)
+        Theme.Colors.TEXT             = new Color(216, 226, 220);       // rgb(216, 226, 220)
+        Theme.Colors.MAIN_BG          = new Color(15, 26, 20);          // rgb(15, 26, 20)
+        Theme.Colors.SIDEBAR          = new Color(27, 59, 43);          // rgb(27, 59, 43)
+        Theme.Colors.INFO_BLOCK       = new Color(18, 33, 25);          // rgb(18, 33, 25)
         
-        Theme.Colors.PRIMARY          = new Color(210, 220, 212); // Muted Soft White/Sage (Leaf Text & Borders)
-        Theme.Colors.SECONDARY        = new Color(45, 142, 87);   // Dark Pine/Forest Green (Tree Text & Accent)
+        Theme.Colors.PRIMARY          = new Color(210, 220, 212);       // rgb(210, 220, 212)
+        Theme.Colors.SECONDARY        = new Color(45, 142, 87);         // rgb(45, 142, 87)
+        Theme.Colors.PRIMARY_ACCENT   = new Color(216, 226, 220);       // rgb(216, 226, 220)
+        Theme.Colors.SECONDARY_ACCENT = new Color(45, 106, 79);         // rgb(45, 106, 79)
         
-        Theme.Colors.PRIMARY_ACCENT   = new Color(216, 226, 220); // Soft Sage Border Accent
-        Theme.Colors.SECONDARY_ACCENT = new Color(45, 106, 79);   // Forest Canopy Green (Button Backgrounds)
-        
-        Theme.Colors.LOGO             = new Color(216, 226, 220); // Softened Logo Text
-        Theme.Colors.INACTIVE_ELEMENT = new Color(82, 96, 88);    // Moss Gray (#526058)
+        Theme.Colors.LOGO             = new Color(216, 226, 220);       // rgb(216, 226, 220)
+        Theme.Colors.INACTIVE_ELEMENT = new Color(82, 96, 88);          // rgb(82, 96, 88)
 
         // Fonts
         Theme.Fonts.TINY   = new Font(Font.SANS_SERIF, Font.BOLD, 16);

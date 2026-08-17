@@ -13,14 +13,16 @@ public class DarkTheme {
         Theme.Symbols.O = "O";
         
         // Colors
-        Theme.Colors.TEXT             = new Color(240, 240, 245);
-        Theme.Colors.MAIN_BG          = new Color(6, 6, 19);
-        Theme.Colors.SIDEBAR          = new Color(24, 18, 36);
-        Theme.Colors.INFO_BLOCK       = new Color(14, 10, 26);
-        Theme.Colors.PRIMARY          = new Color(0, 229, 255);
-        Theme.Colors.SECONDARY        = new Color(234, 0, 154);
-        Theme.Colors.PRIMARY_ACCENT   = new Color(0, 114, 128);
-        Theme.Colors.SECONDARY_ACCENT = new Color(104, 21, 65);
+        Theme.Colors.TEXT             = new Color(240, 240, 245);       //rgb(240, 240, 245)
+        Theme.Colors.MAIN_BG          = new Color(6, 6, 19);            //rgb(6, 6, 19)
+        Theme.Colors.SIDEBAR          = new Color(24, 18, 36);          //rgb(24, 18, 36)
+        Theme.Colors.INFO_BLOCK       = new Color(14, 10, 26);          //rgb(14, 10, 26)
+        
+        Theme.Colors.PRIMARY          = new Color(0, 229, 255);         //rgb(0, 229, 255)
+        Theme.Colors.SECONDARY        = new Color(234, 0, 154);         //rgb(234, 0, 154)
+        Theme.Colors.PRIMARY_ACCENT   = new Color(0, 114, 128);         //rgb(0, 114, 128)
+        Theme.Colors.SECONDARY_ACCENT = new Color(104, 21, 65);         //rgb(104, 21, 65)
+
         Theme.Colors.LOGO             = Color.WHITE;
         Theme.Colors.INACTIVE_ELEMENT = Color.DARK_GRAY;
 
