@@ -38,11 +38,13 @@ public class GameGUI {
     private JButton resetButton   = new JButton("RESET");
     private JButton clientButton  = new JButton("Client");
     private JButton serverButton  = new JButton("Server");
+    private JButton themeButton   = new JButton("🎨"); 
 
     private JCheckBox multiplayerCheckbox = new JCheckBox("Multiplayer");
 
     // Wrappers
-    private JPanel infoLabelBlock      = new JPanel(new GridBagLayout()); // GridBag auto centers children
+    private JPanel gridBlock           = new JPanel(new GridLayout(3, 3, 8, 8));  // holds the 9 grid buttons
+    private JPanel infoLabelBlock      = new JPanel(new GridBagLayout());         // GridBag auto centers children
     private JPanel alertLabelBlock     = new JPanel(new GridBagLayout());
     private JPanel networkButtonsBlock = new JPanel(new GridBagLayout());
 
@@ -55,6 +57,7 @@ public class GameGUI {
         initGrid();
         initGameArea();
         initSidebar();
+        initThemeButton();
 
         frame.add(sidebar,  BorderLayout.WEST);
         frame.add(gameArea, BorderLayout.CENTER);
@@ -68,6 +71,7 @@ public class GameGUI {
     public JButton getResetButton()  { return resetButton;  }
     public JButton getServerButton() { return serverButton; }
     public JButton getClientButton() { return clientButton; }
+    public JButton getThemeButton()  { return themeButton;  }
     public JToggleButton getToggleMultiplayerButton() { return multiplayerCheckbox; }
 
     public void setTurnLabel (String text) { turnLabel .setText(text); }
@@ -99,11 +103,13 @@ public class GameGUI {
                     grid[i][j].setText(Theme.Symbols.X);
                     grid[i][j].setForeground(Theme.Colors.PRIMARY);
                     grid[i][j].setBorder(Theme.Borders.PRIMARY);
+                    grid[i][j].setBackground(Theme.Colors.MAIN_BG);
                 }
                 else if (characterGrid[i][j] == 'O') {
                     grid[i][j].setText(Theme.Symbols.O);
                     grid[i][j].setForeground(Theme.Colors.SECONDARY);
                     grid[i][j].setBorder(Theme.Borders.SECONDARY);
+                    grid[i][j].setBackground(Theme.Colors.MAIN_BG);
                 }
                 else {
                     grid[i][j].setText(String.valueOf(characterGrid[i][j])); 
@@ -130,10 +136,19 @@ public class GameGUI {
         frame.getContentPane().setBackground(Theme.Colors.MAIN_BG);
         sidebar.setBackground(Theme.Colors.SIDEBAR);
         gameArea.setBackground(Theme.Colors.MAIN_BG);
+        gridBlock.setBackground(Theme.Colors.MAIN_BG);
 
-        for (var row : grid) {
-            for (var button : row) {
-                styleGridButton(button);
+        updateGameGrid(); // repaints filled X/O cells with new theme symbols/colors
+
+        char[][] characterGrid = game.getGrid();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (characterGrid[i][j] != 'X' && characterGrid[i][j] != 'O') {
+                    grid[i][j].setFont(Theme.Fonts.LARGE);
+                    grid[i][j].setBackground(Theme.Colors.MAIN_BG);
+                    grid[i][j].setForeground(Theme.Colors.INACTIVE_ELEMENT);
+                    grid[i][j].setBorder(Theme.Borders.DEFAULT);
+                }
             }
         }
 
@@ -143,6 +158,7 @@ public class GameGUI {
         styleResetButton();
         styleNetworkButtons();
         styleMultiplayerToggle();
+        styleThemeButton();
 
         frame.repaint();
     }
@@ -173,21 +189,19 @@ public class GameGUI {
         int gameAreaWidth = (windowWidth   * 7) / 10;  // 70% of Window Width
         int gameFrameSize = (gameAreaWidth * 7) / 10;  // 70% of GameArea
 
-        JPanel gameFrame = new JPanel(new GridLayout(3, 3, 8, 8));
-        
         gameArea .setBackground(Theme.Colors.MAIN_BG);
-        gameFrame.setBackground(Theme.Colors.MAIN_BG);
+        gridBlock.setBackground(Theme.Colors.MAIN_BG);
 
         gameArea .setPreferredSize(new Dimension(gameAreaWidth, windowHeight));
-        gameFrame.setPreferredSize(new Dimension(gameFrameSize, gameFrameSize));
+        gridBlock.setPreferredSize(new Dimension(gameFrameSize, gameFrameSize));
 
         for (var row : grid) {
             for (var button : row) {
-                gameFrame.add(button);
+                gridBlock.add(button);
             }
         }
 
-        gameArea.add(gameFrame);
+        gameArea.add(gridBlock);
     }
             
     private void initSidebar() {
@@ -211,7 +225,7 @@ public class GameGUI {
 
     // "TicTacX" sidebar logo
     private void initLogoLabel() {
-        logoLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 42)); // Sans-serif drops the outdated serif hooks
+        logoLabel.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 42)); 
         logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
         styleLogoLabel();
     }
@@ -236,9 +250,7 @@ public class GameGUI {
 
         // Toggle text color when checked/unchecked
         multiplayerCheckbox.addItemListener(e -> styleMultiplayerToggle());
-
         styleMultiplayerToggle();
-
         multiplayerCheckboxBlock.add(multiplayerCheckbox);
     }
 
@@ -270,7 +282,26 @@ public class GameGUI {
         alertLabelBlock.add(alertLabel);
     }
 
-    // --- Styling Functions ---
+    // Small square button, pinned bottom-right of the window
+    private void initThemeButton() {
+        int size = 40;
+        int xMargin     = 32;
+        int yMargin     = 24;
+
+        themeButton.setBounds(windowWidth  - size - xMargin,
+                              windowHeight - size - yMargin,
+                              size, size);
+
+        themeButton.setFocusPainted(false);
+        themeButton.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 18));
+        themeButton.setToolTipText("Change theme");
+
+        styleThemeButton();
+
+        frame.getLayeredPane().add(themeButton, JLayeredPane.PALETTE_LAYER);
+    }
+
+    // --- Style Functions ---
 
     private void styleGridButton(JButton button) {
         button.setFont(Theme.Fonts.LARGE);
@@ -345,6 +376,13 @@ public class GameGUI {
         }
 
         multiplayerCheckboxBlock.setBorder(Theme.Borders.SECONDARY);
+    }
+
+    // Bottom-right theme toggle button
+    private void styleThemeButton() {
+        themeButton.setBackground(Theme.Colors.SIDEBAR);
+        themeButton.setForeground(Theme.Colors.PRIMARY);
+        themeButton.setBorder(Theme.Borders.PRIMARY);
     }
     
     // GUI Utils

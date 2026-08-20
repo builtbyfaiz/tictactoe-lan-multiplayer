@@ -9,6 +9,13 @@ import javax.swing.SwingUtilities;
 
 import src.model.Game;
 import src.model.NetworkState;
+
+// Themes
+import src.model.themes.DarkTheme;
+import src.model.themes.ForestTheme;
+import src.model.themes.LavaTheme;
+import src.model.themes.LightTheme;
+
 import src.network.GameClient;
 import src.network.GamePeer;
 import src.network.GameServer;
@@ -24,6 +31,14 @@ public class GameController {
 
     private static final String INVALID_MOVE_MSG = "<html><center>Already Marked!</center></html>";
 
+    // Centralized theme list - add/remove entries here to change the cycle order
+    private static final Runnable[] THEMES = {
+        DarkTheme::apply,
+        LightTheme::apply,
+        ForestTheme::apply,
+        LavaTheme::apply
+    };
+
     private final Game game;     // Console implementation
     private final GameGUI view;  // GUI render of the game state
 
@@ -31,6 +46,7 @@ public class GameController {
     private boolean multiplayerMode;  // State of multiplayer
     private boolean isServer;         // Server is always X and moves first
     private boolean myTurn;           // If it is turn of current instance
+    private int themeIndex;           // Index into THEMES for the currently applied theme
     
     /**
      * Wires the GUI to this controller and sets initial state.
@@ -57,6 +73,7 @@ public class GameController {
         bindResetButton();
         bindNetworkButtons();
         bindToggleMultiplayerButton();
+        bindThemeButton();
     }
 
     // --- Binding Functions ---
@@ -81,6 +98,10 @@ public class GameController {
     private void bindToggleMultiplayerButton() {
         view.getToggleMultiplayerButton()
                 .addActionListener(e -> setMultiplayerMode(view.getToggleMultiplayerButton().isSelected()));
+    }
+
+    private void bindThemeButton() {
+        view.getThemeButton().addActionListener(e -> onThemeClicked());
     }
 
     // --- Gameplay ---
@@ -151,6 +172,14 @@ public class GameController {
         view.resetGridColors();
         view.setAlertLabel(null);
         updateView();
+    }
+
+    /**
+     * Cycles to the next theme in {@link #THEMES} and applies it to the view.
+     */
+    private void onThemeClicked() {
+        themeIndex = (themeIndex + 1) % THEMES.length;
+        view.setTheme(THEMES[themeIndex]);
     }
 
     /**

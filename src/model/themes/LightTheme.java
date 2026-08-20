@@ -9,8 +9,8 @@ public class LightTheme {
     public static void apply() {
 
         // Symbols
-        Theme.Symbols.X = "🌲";
-        Theme.Symbols.O = "🍂";
+        Theme.Symbols.X = "X";
+        Theme.Symbols.O = "O";
 
         // Colors
         Theme.Colors.TEXT             = new Color(58, 42, 28);          //rgb(58, 42, 28)
