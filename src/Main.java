@@ -7,11 +7,8 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import src.controller.GameController;
 import src.model.Game;
 import src.model.themes.DarkTheme;
-import src.model.themes.ForestTheme;
-import src.model.themes.LightTheme;
 import src.model.themes.Theme;
 import src.view.GameGUI;
-import java.awt.Color;
 
 class Main {
 
@@ -29,7 +26,8 @@ class Main {
     // Setsup GUI helpers, applies base theme
     private static void initLookAndFeel() {
 
-        LightTheme.apply();
+        DarkTheme.apply(); 
+
         // Flat laf provides a modern look to java swing.
         FlatDarkLaf.setup();
         UIManager.put("Component.arc", 12);

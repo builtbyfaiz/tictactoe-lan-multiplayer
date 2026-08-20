@@ -138,7 +138,7 @@ public class GameGUI {
         gameArea.setBackground(Theme.Colors.MAIN_BG);
         gridBlock.setBackground(Theme.Colors.MAIN_BG);
 
-        updateGameGrid(); // repaints filled X/O cells with new theme symbols/colors
+        updateGameGrid();
 
         char[][] characterGrid = game.getGrid();
         for (int i = 0; i < 3; i++) {
@@ -160,7 +160,8 @@ public class GameGUI {
         styleMultiplayerToggle();
         styleThemeButton();
 
-        frame.repaint();
+        frame.getContentPane().revalidate();
+        frame.getContentPane().repaint();
     }
 
     // --- Initializers ---

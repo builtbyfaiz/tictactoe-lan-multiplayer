@@ -29,7 +29,7 @@ public class LightTheme {
         // Fonts
         Theme.Fonts.TINY   = new Font(Font.SANS_SERIF, Font.BOLD, 20);
         Theme.Fonts.SMALL  = new Font(Font.SANS_SERIF, Font.BOLD, 24);
-        Theme.Fonts.MEDIUM = new Font(Font.SANS_SERIF, Font.BOLD, 38);
+        Theme.Fonts.MEDIUM = new Font(Font.SANS_SERIF, Font.BOLD, 34);
         Theme.Fonts.LARGE  = new Font(Font.SANS_SERIF, Font.BOLD, 72);
 
         // Borders

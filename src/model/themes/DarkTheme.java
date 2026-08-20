@@ -37,7 +37,7 @@ public class DarkTheme {
         Theme.Borders.SECONDARY = BorderFactory.createLineBorder(Theme.Colors.SECONDARY_ACCENT, 2);
         Theme.Borders.DEFAULT   = BorderFactory.createLineBorder(Theme.Colors.INACTIVE_ELEMENT, 2);
 
-        Theme.Borders.INFO_BLOCK_TOP    = BorderFactory.createMatteBorder(8, 8, 0, 8, Theme.Colors.SIDEBAR);
-        Theme.Borders.INFO_BLOCK_BOTTOM = BorderFactory.createMatteBorder(0, 8, 8, 8, Theme.Colors.SIDEBAR);
+        Theme.Borders.INFO_BLOCK_TOP    = BorderFactory.createMatteBorder(10, 10, 0, 10, Theme.Colors.SIDEBAR);
+        Theme.Borders.INFO_BLOCK_BOTTOM = BorderFactory.createMatteBorder(0, 10, 10, 10, Theme.Colors.SIDEBAR);
     }
 }
