@@ -4,11 +4,11 @@ import javax.swing.UIManager;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 
-import src.controller.GameController;
+import src.controller.Controller;
 import src.model.Game;
 import src.model.themes.DarkTheme;
 import src.model.themes.Theme;
-import src.view.GameGUI;
+import src.view.GUI;
 
 class Main {
 
@@ -17,10 +17,10 @@ class Main {
         initLookAndFeel();
         
         Game ticTacToe = new Game();
-        GameGUI gameGUI = new GameGUI(ticTacToe);
+        GUI gameGUI = new GUI(ticTacToe);
         
         // Creating the controller binds it and starts the game
-        GameController controller = new GameController(ticTacToe, gameGUI);
+        Controller controller = new Controller(ticTacToe, gameGUI);
     }
 
     // Setsup GUI helpers, applies base theme

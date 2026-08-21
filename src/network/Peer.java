@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 /// Parent network class for client/server, Handles data communication
-public abstract class GamePeer {
+public abstract class Peer {
     protected Socket socket;
 
     public boolean send(int data) {

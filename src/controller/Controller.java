@@ -16,18 +16,18 @@ import src.model.themes.ForestTheme;
 import src.model.themes.LavaTheme;
 import src.model.themes.LightTheme;
 
-import src.network.GameClient;
-import src.network.GamePeer;
-import src.network.GameServer;
-import src.view.GameGUI;
+import src.network.Client;
+import src.network.Peer;
+import src.network.Server;
+import src.view.GUI;
 
 /**
  * Manager class acting as middleman between GUI, Main, and Network.
  * <p>
- * Keeps {@link Game} (state/rules) and {@link GameGUI} (rendering) decoupled from
+ * Keeps {@link Game} (state/rules) and {@link GUI} (rendering) decoupled from
  * each other and from the network layer, this class acts as an orchestrator
  */
-public class GameController {
+public class Controller {
 
     private static final String INVALID_MOVE_MSG = "<html><center>Already Marked!</center></html>";
 
@@ -39,10 +39,10 @@ public class GameController {
         LavaTheme::apply
     };
 
-    private final Game game;     // Console implementation
-    private final GameGUI view;  // GUI render of the game state
+    private final Game game;  // Console implementation
+    private final GUI view;   // GUI render of the game state
 
-    private GamePeer network;         // Active connection, null when not in multiplayer
+    private Peer network;             // Active connection, null when not in multiplayer
     private boolean multiplayerMode;  // State of multiplayer
     private boolean isServer;         // Server is always X and moves first
     private boolean myTurn;           // If it is turn of current instance
@@ -54,7 +54,7 @@ public class GameController {
      * Network buttons start hidden as multiplayer is off by default.
      * The window close listener exists to disconnect sockets afterward if present
      */
-    public GameController(Game game, GameGUI view) {
+    public Controller(Game game, GUI view) {
         this.game = game;
         this.view = view;
 
@@ -191,7 +191,7 @@ public class GameController {
     private void initServer() {
         if (network != null)
             network.disconnect();
-        network = new GameServer();
+        network = new Server();
         isServer = true;
         view.updateNetworkState(NetworkState.SERVER_INIT, network.getIP());
 
@@ -215,7 +215,7 @@ public class GameController {
      */
     private void initClient() {
         if (network != null) network.disconnect();
-        network  = new GameClient();
+        network  = new Client();
         isServer = false;
         view.updateNetworkState(NetworkState.CLIENT_INIT, null);
 
@@ -303,7 +303,7 @@ public class GameController {
     }
 
     /**
-     * Handles opponent disconnect (signalled by {@code -1} from {@link GamePeer#receive()}).
+     * Handles opponent disconnect (signalled by {@code -1} from {@link Peer#receive()}).
      * <p>
      * Routes through {@link #setMultiplayerMode(boolean)}, so
      * UI can update as multiplayer is no longer active.

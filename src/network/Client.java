@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.*;
 
 /// Game class responsible for creating, and establishing the client socket
-public class GameClient extends GamePeer {
+public class Client extends Peer {
 
     /// Establish a socket connection with the entered IP on port 8080
     public boolean connect(String IP) {

@@ -10,7 +10,7 @@ import src.model.themes.Theme;
 
 
 /// Renders game state in GUI window
-public class GameGUI {
+public class GUI {
     
     // --- Variable Declarations ---
     private final int windowWidth  = 800;
@@ -51,7 +51,7 @@ public class GameGUI {
     private JPanel multiplayerCheckboxBlock = new JPanel(new GridLayout(1,1,0,0));
 
     // Contructor
-    public GameGUI(Game game) {
+    public GUI(Game game) {
         this.game = game;
         initWindow();
         initGrid();

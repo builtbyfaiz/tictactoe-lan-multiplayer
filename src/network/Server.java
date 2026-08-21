@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.*;
 
 /// Game class responsible for creating, and establishing the server socket
-public class GameServer extends GamePeer {
+public class Server extends Peer {
 
     ServerSocket server;
 
