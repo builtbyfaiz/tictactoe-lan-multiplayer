@@ -3,7 +3,7 @@ package src.model;
 /// The underlying console implementation of tictactoe underpinning the GUI
 public class Game {
 
-    private char grid_[][] = {{ '1', '2', '3' },
+    private char grid[][] = {{ '1', '2', '3' },
                               { '4', '5', '6' },
                               { '7', '8', '9' }};
 
@@ -15,7 +15,9 @@ public class Game {
     private int player1Score = 0;
     private int player2Score = 0;
     
-    public boolean win = false;
+    private boolean win  = false;
+    private boolean draw = false;
+    private boolean over = false;
     
     /**
      * A function to get game's current score tally of both players
@@ -26,23 +28,12 @@ public class Game {
         return "Score: " + String.valueOf(player1Score) + "-" + String.valueOf(player2Score);
     }
 
-    public char[][] getGrid() {
-        return grid_;
-    }
+    public char[][] getGrid() { return grid; }
+    public int      getTurn() { return turn; }
 
-public boolean isDraw() {
-    for (char[] row : grid_) {
-        for (char cell : row) {
-            if (cell != player1Marker && cell != player2Marker) {
-                return false;
-            }
-        }
-    }
-    return !win;
-}
-    public int getTurn() {
-        return turn;
-    }
+    public boolean isWon()   { return win;  }
+    public boolean isDrawn() { return draw; }
+    public boolean isOver()  { return over; }
 
     /**
      * Executes a full move cycle: input handling, processing and win checking.
@@ -61,39 +52,60 @@ public boolean isDraw() {
      */
     private void checkWin() {
 
-        for (int i = 0; i < grid_.length; i++) {
+        for (int i = 0; i < grid.length; i++) {
 
             // Check Horizontally
-            if (grid_[i][0] == currentMarker)
-                if (grid_[i][1] == currentMarker)
-                    if (grid_[i][2] == currentMarker)
+            if (grid[i][0] == currentMarker)
+                if (grid[i][1] == currentMarker)
+                    if (grid[i][2] == currentMarker)
                         win = true;
 
             // Check Vertically
-            if (grid_[0][i] == currentMarker)
-                if (grid_[1][i] == currentMarker)
-                    if (grid_[2][i] == currentMarker)
+            if (grid[0][i] == currentMarker)
+                if (grid[1][i] == currentMarker)
+                    if (grid[2][i] == currentMarker)
                         win = true;
         }
 
         // Check Primary Diagonal -> \
-        if (grid_[0][0] == currentMarker)
-            if (grid_[1][1] == currentMarker)
-                if (grid_[2][2] == currentMarker)
+        if (grid[0][0] == currentMarker)
+            if (grid[1][1] == currentMarker)
+                if (grid[2][2] == currentMarker)
                     win = true;
 
         // Check Secondary Diagonal -> /
-        if (grid_[0][2] == currentMarker)
-            if (grid_[1][1] == currentMarker)
-                if (grid_[2][0] == currentMarker)
+        if (grid[0][2] == currentMarker)
+            if (grid[1][1] == currentMarker)
+                if (grid[2][0] == currentMarker)
                     win = true;
 
         if (win) {
-            if (turn == 1)
-                player1Score++;
-            if (turn == 2)
-                player2Score++;
+            if (turn == 1) player1Score++;
+            if (turn == 2) player2Score++;
         }
+    }
+
+    /**
+     * Returns if any cell remains empty.
+     * Sets {@link #draw} as true if all cells filled and game has not been won.
+     */
+    private void checkDraw() {
+        for (char[] row : grid) {
+            for (char cell : row) {
+                if (cell != player1Marker && cell != player2Marker) {
+                    return; // Return if any empty cell remains
+                }
+            }
+        }
+
+        draw = !win; // if no empty cells then !win = Draw state
+    }
+
+    private void checkOver() {
+        checkWin();
+        checkDraw();
+        
+        if(win||draw) over = true;
     }
 
     /**
@@ -101,12 +113,16 @@ public boolean isDraw() {
      */
     private void resetGame() {
         currentMarker = 'X';
-        turn = 1;
-        win = false;
 
-        grid_ = new char[][] {{ '1', '2', '3' },
-                              { '4', '5', '6' },
-                              { '7', '8', '9' }};
+        turn    = 1;
+
+        win  = false;
+        draw = false;
+        over = false;
+
+        grid = new char[][] {{ '1', '2', '3' },
+                             { '4', '5', '6' },
+                             { '7', '8', '9' }};
     }
 
     /**
@@ -145,9 +161,9 @@ public boolean isDraw() {
      * @param col column index of the cell
      */
     private void mark(int row, int col) {
-        if (grid_[row][col] != player1Marker && grid_[row][col] != player2Marker) {
-            grid_[row][col] = currentMarker;
-            checkWin();
+        if (grid[row][col] != player1Marker && grid[row][col] != player2Marker) {
+            grid[row][col] = currentMarker;
+            checkOver();
             if (!win) {
                 toggleTurn();
             }

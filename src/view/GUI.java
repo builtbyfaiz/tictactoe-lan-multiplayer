@@ -2,7 +2,6 @@ package src.view;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.border.Border;
 
 import src.model.Game;
 import src.model.NetworkState;

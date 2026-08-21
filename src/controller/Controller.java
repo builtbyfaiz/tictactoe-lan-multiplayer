@@ -33,10 +33,10 @@ public class Controller {
 
     // Centralized theme list - add/remove entries here to change the cycle order
     private static final Runnable[] THEMES = {
-        DarkTheme::apply,
-        LightTheme::apply,
-        ForestTheme::apply,
-        LavaTheme::apply
+        DarkTheme   ::apply,
+        LightTheme  ::apply,
+        ForestTheme ::apply,
+        LavaTheme   ::apply
     };
 
     private final Game game;  // Console implementation
@@ -114,7 +114,7 @@ public class Controller {
      * needs to receive the server's reset (0) or disconnect (-1) signal.
      */
     private void onCellClicked(JButton button) {
-        if (multiplayerMode && (!myTurn || game.win))
+        if (multiplayerMode && (!myTurn || game.isOver()))
             return;
 
         view.setAlertLabel(null);
@@ -128,8 +128,8 @@ public class Controller {
         }
 
         updateView();
-        if (game.win) showWinMessage();
-
+        if (game.isOver()) showGameoverMessage();
+        
         if (multiplayerMode) {
             if (!network.send(choice)) {
                 handleDisconnect();
@@ -137,13 +137,9 @@ public class Controller {
             }
             myTurn = false;
 
-            if (!game.win) {
+            // Listen if not over, if over then only client listens (for resetCode)
+            if (!game.isOver() || !isServer) 
                 listenForOpponentMove();
-            } 
-            if (game.win && !isServer) {
-                // Client spawns last thread to listen for 0/-1 reset signal
-                listenForOpponentMove();
-            }
         }
     }
 
@@ -160,7 +156,7 @@ public class Controller {
         }
 
         // Multiplayer: Only if game end + instance is server.
-        if (isServer && (game.win || game.isDraw())) {
+        if (isServer && game.isOver()) {
             resetGame();
             network.send(0); // Send 0 to client to reset it's game as well
             myTurn = true;
@@ -201,7 +197,7 @@ public class Controller {
                 SwingUtilities.invokeLater(() -> {
                     view.updateNetworkState(NetworkState.CONNECTED, network.getIP());
                     resetGame();
-                    myTurn = true; // server moves first
+                    myTurn = true; // Server moves first
                 });
             }
         }).start();
@@ -229,8 +225,8 @@ public class Controller {
             }
 
             SwingUtilities.invokeLater(() -> {
-                view.updateNetworkState(NetworkState.CONNECTED, network.getIP());
                 resetGame();
+                view.updateNetworkState(NetworkState.CONNECTED, network.getIP());
                 myTurn = false; // wait for server's first move
             });
             listenForOpponentMove();
@@ -294,7 +290,7 @@ public class Controller {
         game.play(move);
         updateView();
 
-        if (game.win) { 
+        if (game.isOver()) { 
             showWinMessage();
             if (!isServer) listenForOpponentMove(); // wait for server's eventual 0/-1
 
@@ -323,5 +319,14 @@ public class Controller {
     private void showWinMessage() {
         view.setAlertLabel("<html><center>Player " + game.getTurn()
                 + " Won!</center></html>");
+    }
+
+    private void showDrawMessage() {
+        view.setAlertLabel("<html><center>Game is a draw!.</center></html>");
+    }
+
+    private void showGameoverMessage() {
+        if(game.isWon())   showWinMessage();
+        if(game.isDrawn()) showDrawMessage();
     }
 }
