@@ -160,7 +160,7 @@ public class Controller {
         }
 
         // Multiplayer: Only if game end + instance is server.
-        if (isServer && game.win) {
+        if (isServer && (game.win || game.isDraw())) {
             resetGame();
             network.send(0); // Send 0 to client to reset it's game as well
             myTurn = true;
