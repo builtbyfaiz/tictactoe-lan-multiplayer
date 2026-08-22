@@ -101,6 +101,10 @@ public class Game {
         draw = !win; // if no empty cells then !win = Draw state
     }
 
+
+    /**
+     * Calls {@link #checkWin()} & {@link #checkDraw()}, and sets if game {@link #over}
+     */
     private void checkOver() {
         checkWin();
         checkDraw();

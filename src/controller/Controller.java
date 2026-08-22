@@ -195,8 +195,8 @@ public class Controller {
             boolean connected = network.connect(null);
             if (connected) {
                 SwingUtilities.invokeLater(() -> {
-                    view.updateNetworkState(NetworkState.CONNECTED, network.getIP());
                     resetGame();
+                    view.updateNetworkState(NetworkState.CONNECTED, network.getIP());
                     myTurn = true; // Server moves first
                 });
             }
