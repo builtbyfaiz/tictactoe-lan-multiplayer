@@ -1,0 +1,126 @@
+name: Build & Release TicTacToe
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform: windows
+            jpackage_type: app-image
+            icon: assets/ticTacX.ico
+            archive_ext: zip
+          - os: ubuntu-latest
+            platform: linux
+            jpackage_type: app-image
+            icon: assets/ticTacX.png
+            archive_ext: tar.gz
+          - os: macos-latest
+            platform: macos
+            jpackage_type: app-image
+            icon: assets/ticTacX.icns
+            archive_ext: zip
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Compile sources
+        shell: bash
+        run: |
+          mkdir -p out
+          find src -name "*.java" > sources.txt
+          javac -d out -cp "lib/*" @sources.txt
+
+      - name: Copy resources into out
+        shell: bash
+        run: |
+          cp -r assets out/assets || true
+          cp lib/*.jar out/ || true
+
+      - name: Build fat JAR
+        shell: bash
+        run: |
+          mkdir -p dist
+          cd out
+          # Extract flatlaf jar classes into the same tree so the fat jar is self-contained
+          for jar in *.jar; do
+            [ -f "$jar" ] && jar xf "$jar" && rm -f "$jar"
+          done
+          jar --create --file ../dist/tictactoe.jar --main-class Main .
+          cd ..
+
+      - name: Run jpackage
+        shell: bash
+        run: |
+          mkdir -p appimage
+          jpackage \
+            --type ${{ matrix.jpackage_type }} \
+            --name tictactoe \
+            --input dist \
+            --main-jar tictactoe.jar \
+            --main-class Main \
+            --icon ${{ matrix.icon }} \
+            --dest appimage
+
+      - name: Package artifact (Windows)
+        if: matrix.platform == 'windows'
+        shell: bash
+        run: |
+          cd appimage
+          powershell -Command "Compress-Archive -Path tictactoe -DestinationPath ../tictactoe-windows.zip"
+
+      - name: Package artifact (Linux)
+        if: matrix.platform == 'linux'
+        shell: bash
+        run: |
+          cd appimage/tictactoe
+          mv bin/tictactoe bin/tictactoe.exe
+          cd ..
+          tar -czf ../tictactoe-linux.tar.gz tictactoe
+
+      - name: Package artifact (macOS)
+        if: matrix.platform == 'macos'
+        shell: bash
+        run: |
+          cd appimage/tictactoe.app/Contents/MacOS
+          mv tictactoe tictactoe.exe
+          cd ../../..
+          zip -r ../tictactoe-macos.zip tictactoe.app
+
+      - name: Upload to release (Windows)
+        if: matrix.platform == 'windows'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: tictactoe-windows.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload to release (Linux)
+        if: matrix.platform == 'linux'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: tictactoe-linux.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload to release (macOS)
+        if: matrix.platform == 'macos'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: tictactoe-macos.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
