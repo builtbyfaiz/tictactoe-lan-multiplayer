@@ -38,12 +38,12 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      - name: Compile sources
+      - name: Compile sources (release build, no debug info)
         shell: bash
         run: |
           mkdir -p out
           find src -name "*.java" > sources.txt
-          javac -d out -cp "lib/*" @sources.txt
+          javac -g:none -d out -cp "lib/*" @sources.txt
 
       - name: Copy resources into out
         shell: bash
@@ -60,8 +60,41 @@ jobs:
           for jar in *.jar; do
             [ -f "$jar" ] && jar xf "$jar" && rm -f "$jar"
           done
-          jar --create --file ../dist/tictactoe.jar --main-class Main .
+          # Use a manual manifest instead of --main-class: the jar tool's
+          # --create --main-class validation rejects a main class sitting in
+          # the unnamed/default package ("Main: unnamed package"), but a
+          # classic manifest-based jar has no such restriction.
+          printf 'Main-Class: Main\n' > MANIFEST.MF
+          jar --create --file ../dist/tictactoe.jar --manifest MANIFEST.MF .
+          rm -f MANIFEST.MF
           cd ..
+
+      - name: Determine required modules
+        shell: bash
+        run: |
+          echo "Detecting modules needed by tictactoe.jar..."
+          jdeps --ignore-missing-deps --print-module-deps \
+            --multi-release 21 \
+            -cp dist/tictactoe.jar \
+            dist/tictactoe.jar > modules.txt || echo "java.base,java.desktop,java.logging" > modules.txt
+          cat modules.txt
+
+      - name: Build minimal custom runtime (jlink)
+        shell: bash
+        run: |
+          MODULES=$(cat modules.txt)
+          # Swing UI needs java.desktop even if jdeps misses it via reflection
+          case "$MODULES" in
+            *java.desktop*) ;;
+            *) MODULES="$MODULES,java.desktop" ;;
+          esac
+          jlink \
+            --add-modules "$MODULES" \
+            --strip-debug \
+            --no-header-files \
+            --no-man-pages \
+            --compress=2 \
+            --output custom-runtime
 
       - name: Run jpackage
         shell: bash
@@ -74,6 +107,7 @@ jobs:
             --main-jar tictactoe.jar \
             --main-class Main \
             --icon ${{ matrix.icon }} \
+            --runtime-image custom-runtime \
             --dest appimage
 
       - name: Package artifact (Windows)
